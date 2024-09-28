@@ -26,7 +26,28 @@ workspace_dir.mkdir(parents=True, exist_ok=True)
 class VideoAnalysisState(BaseModel):
     video_uuid: str = "0000-4444-0000-4444"
 
-@app.post("/video", tags=["Analysis"])
+from fastapi.responses import FileResponse
+import os
+@app.get("/video/cc/{process_uuid}")
+async def download_subtitles(process_uuid: str = "0000-4444-0000-4444"):
+    file_path = pathlib.Path(f"../test_data/{process_uuid}/{process_uuid}.srt")
+    if file_path.exists():
+        return FileResponse(path=file_path, filename=os.path.basename(file_path), media_type='application/octet-stream')
+    else:
+        return {"error": "File not found"}
+
+@app.get("/video/{process_uuid}")
+async def download_file(process_uuid: str):
+    file_path = pathlib.Path(f"../test_data/{process_uuid}/{process_uuid}.mp4")
+    if file_path.exists():
+        return FileResponse(path=file_path, filename=os.path.basename(file_path), media_type='application/octet-stream')
+    else:
+        return {"error": "File not found"}
+
+# To run the FastAPI app, use the following command:
+# uvicorn filename:app --reload
+
+@app.post("/video")
 async def upload_video(video_data: VideoAnalysisState):
     global jobs
     # Create a processing object
@@ -39,6 +60,22 @@ async def upload_video(video_data: VideoAnalysisState):
     except Exception as e:
         raise HTTPException(status_code=503, detail=e)
     return {"process_id": process_id}
+
+class ProcesingStageAudioIndexes(BaseModel):
+    flesch_reading_ease: float
+    gunning_fog_index: float 
+
+class ProcesingStageAudioSimiliar(BaseModel):
+    start: float
+    end: float
+    compared: str
+    compared_to: str
+class ProcesingStageAudio(BaseModel):
+    similar_sentences_after_each_other: ProcesingStageAudioSimiliar
+    indexes: ProcesingStageAudioIndexes
+class ProcessingStage(BaseModel):
+    stage: dict
+    audio: ProcesingStageAudio
 
 @app.post("/analysis/audio")
 async def get_processing_status(video_data: VideoAnalysisState):
