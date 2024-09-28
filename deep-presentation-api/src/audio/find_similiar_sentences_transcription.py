@@ -19,7 +19,7 @@ def compare(str1:str, str2: str, treshold: float = 0.8):
         return True
     return False
 
-def find_them(transcription):
+def find_similiar_sentences(transcription):
     similar_results_ts = []
     for idx, sentence in enumerate(transcription):
         if idx > 0:
