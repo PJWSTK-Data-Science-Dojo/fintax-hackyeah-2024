@@ -59,6 +59,18 @@ def _did_make_repetitions(text: str) -> bool:
 
     return extract_boolean_model_response(get_openai_response(system_prompt, text))
 
+def _did_use_passive_voice(text: str) -> bool:
+    system_prompt = "You are an expert in presentation analysis and feedback. A user will \
+                    provide you with an excerpt from a presentation in Polish, which may start in the \
+                    middle or include only parts of the presentation. Your task is to \
+                    identify if the speaker used passive voice. \
+                    If the speaker did use passive voice in the presentation you should \
+                    respond with '1', otherwise, if the speaker did not use passive voice, \
+                    respond with '0'. Always respond with only one character (1 or 0)."
+
+    return extract_boolean_model_response(get_openai_response(system_prompt, text))
+
+
 
 def get_ai_textual_report(video_uuid):
     load_dotenv()
@@ -69,5 +81,6 @@ def get_ai_textual_report(video_uuid):
     report_data["too_many_numbers_usesd"] = _did_use_too_many_numbers(text)
     report_data["chage_of_topic"] = _did_change_topics(text)
     report_data["repetitions"]= _did_make_repetitions(text)
+    report_data["passive_voice"]= _did_use_passive_voice(text)
 
     return report_data
