@@ -13,6 +13,12 @@ fastapi = "^0.115.0"
 python-multipart = "^0.0.11"
 librosa = "^0.10.2.post1"
 pillow = "^10.4.0"
+deepface = "^0.0.93"
+tf-keras = "^2.17.0"
+openai = "^1.50.2"
+sentence-transformers = "^3.1.1"
+python-dotenv = "^1.0.1"
+nltk = "^3.9.1"
 
 [build-system]
 requires = ["poetry-core"]
