@@ -1,19 +1,11 @@
 import functools
-import json
 import os
 
 from dotenv import load_dotenv
 import openai
 from openai.types.chat import ChatCompletion
 
-
-def _get_transcription(video_uuid) -> str:
-    path = f"test_data/{video_uuid}/transcription.json"
-
-    with open(path, "r") as json_file:
-        data = json.load(json_file)
-
-    return " ".join(item["text"] for item in data)
+from utils.common import get_transcription
 
 
 @functools.cache
@@ -166,7 +158,7 @@ def _did_make_repetitions(text: str) -> bool:
 
 def get_ai_textual_report(video_uuid):
     load_dotenv()
-    text = _get_transcription(video_uuid)
+    text = get_transcription(video_uuid)
 
     report_data = {}
     report_data["ai_advice"] = _get_ai_advice(text)
