@@ -26,8 +26,7 @@ def llm_query(query: str, system: str = "You are a helpful assistant."):
 
 @functools.cache
 def get_transcription(video_uuid) -> str:
-    path = f"test_data/{video_uuid}/transcription.json"
-
+    path = pathlib.Path(f"../test_data/{video_uuid}/transcription.json")
     with open(path, "r") as json_file:
         data = json.load(json_file)
 
