@@ -73,15 +73,11 @@ class VisionProcessing:
         logging.info(f"Video chunked to frames")
 
         video_frames = sorted([str(f) for f in pathlib.Path(tmpdir_vids).glob("*.jpg")])
-        video_frames = process_halves(video_frames)
         self.video_processing_all_frames_count = len(video_frames)
         # Process each video chunk
         logging.info(f"Processing video frames")
-        for idx, video_frame_file_path in enumerate(video_frames):
-            frame_ts = int(str(pathlib.Path(video_frame_file_path).stem).split("_")[1])
-            logging.info(
-                f"Processing frame {idx} | {len(video_frames)} (ts: {frame_ts})"
-            )
+        
+        # TODO: Process video
         end_time = time.time()
         delta_time = end_time - start_time
         logging.info(f"Processed video frames")
