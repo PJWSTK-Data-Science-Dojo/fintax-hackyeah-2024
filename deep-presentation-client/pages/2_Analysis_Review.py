@@ -9,15 +9,16 @@ load_dotenv('.env.local')
 API_URL = os.getenv('API_URL')
 VIDEO_STORAGE = os.getenv('VIDEO_STORAGE')
 
+# for emotion, (emoticon, color) in EMOTICON_MAP.items():
 EMOTICON_MAP = {
-    'angry': '😡',
-    'disgust': '🤢',
-    'fear': '😨',
-    'happy': '😃',
-    'sad': '😢',
-    'surprise': '😮',
-    'neutral': '😐',
-    None: '😐'
+    'angry': ('😡', '#FF5733'),
+    'disgust': ('🤢', '#8DFF33'),
+    'fear': ('😨', '#33FFF5'),
+    'happy': ('😃', '#FFE333'),
+    'sad': ('😢', '#335BFF'),
+    'surprise': ('😮', '#FF33EC'),
+    'neutral': ('😐', '#A6A6A6'),
+    None: ('😐', '#A6A6A6')
 }
 
 
@@ -65,37 +66,52 @@ def cached_analysis_response():
     return mock_analysis_response()
 
 
-def get_emotion_from_timestamp(analysis, current_time):
-    current_seconds = int(current_time)
-    for entry in analysis['frames']:
-        if entry['start'] <= current_seconds <= entry['end']:
-            return EMOTICON_MAP[entry['emotion']]
-    return EMOTICON_MAP['neutral']
-
-
-def st_player_with_timestamp(url, height=None, progress_interval=1000):
-    timestamp_placeholder = st.empty()
-
-    options = {
-        "events": ["onProgress"],
-        "progress_interval": progress_interval,
-        "height": height
-    }
-
-    event = st_player(url, **options)
-    response = cached_analysis_response()
-
-    if event and isinstance(event, tuple) and len(event) > 1 and event[0] == 'onProgress':
-        current_time = int(event[1].get('playedSeconds', 0))
-        timestamp_placeholder.text(f"Aktualna emocja: {get_emotion_from_timestamp(response, current_time)}")
-
+# def st_player_with_timestamp(url, height=None, progress_interval=1000):
+#     timestamp_placeholder = st.empty()
+#
+#     options = {
+#         "events": ["onProgress"],
+#         "progress_interval": progress_interval,
+#         "height": height
+#     }
+#
+#     event = st_player(url, **options)
+#     response = cached_analysis_response()
+#
+#     if event and isinstance(event, tuple) and len(event) > 1 and event[0] == 'onProgress':
+#         current_time = int(event[1].get('playedSeconds', 0))
+#         timestamp_placeholder.text(f"Aktualna emocja: {get_emotion_from_timestamp(response, current_time)}")
+#
 
 def video_review():
     if 'CURRENT_VIDEO_UUID' not in st.session_state:
         st.write("No video selected for review.")
         return
 
-    st_player_with_timestamp("https://youtu.be/CmSKVW1v0xM")
+    video_col, legend_col = st.columns([4, 1])
+
+    with video_col:
+        st_player("https://youtu.be/CmSKVW1v0xM")
+
+        response = cached_analysis_response()
+        frames = response['frames']
+        color_list = [EMOTICON_MAP[frame['emotion']][1] for frame in frames]
+
+        color_bar_html = '<div style="display: flex; width: 100%; height: 30px; margin-top: 10px;">'
+        for color in color_list:
+            color_bar_html += f'<div style="flex: 1; background-color: {color};"></div>'
+        color_bar_html += '</div>'
+
+        st.markdown(color_bar_html, unsafe_allow_html=True)
+
+    with legend_col:
+        for emotion, (emoticon, color) in EMOTICON_MAP.items():
+            if emotion is None:
+                continue
+            st.write(f"{emoticon} - {emotion.capitalize() if emotion else 'Neutral'}")
+            st.markdown(
+                f'<div style="background-color:{color}; width: 80%; height: 30px; border-radius: 5px; margin-bottom: 5px;"></div>',
+                unsafe_allow_html=True)
 
 
 def audio_review():
