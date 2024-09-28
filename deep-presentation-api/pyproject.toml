@@ -15,6 +15,8 @@ librosa = "^0.10.2.post1"
 pillow = "^10.4.0"
 deepface = "^0.0.93"
 tf-keras = "^2.17.0"
+openai = "^1.50.2"
+sentence-transformers = "^3.1.1"
 
 [build-system]
 requires = ["poetry-core"]
