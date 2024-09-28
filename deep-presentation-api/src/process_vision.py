@@ -6,7 +6,7 @@ import subprocess
 import logging
 from io import BytesIO
 from PIL import Image
-
+from text.ai_textual_report import get_ai_textual_report
 
 def split_video_to_frames(video_file_path, tmpdir):
     """
@@ -60,10 +60,10 @@ def process_halves(arr, start=0, end=None, depth=0):
 class VisionProcessing:
     def __init__(self):
         self.video_vector_store = None
-        self.video_processing_results = []
+        self.video_processing_results = {}
         self.video_processing_all_frames_count = 0
 
-    def process_vision(self, video_file_path, workdir):
+    def process_vision(self, video_file_path: pathlib.Path, workdir):
         start_time = time.time()
         tmpdir_vids = pathlib.Path(workdir, "frames")
         tmpdir_vids.mkdir(exist_ok=True)
@@ -78,6 +78,8 @@ class VisionProcessing:
         logging.info(f"Processing video frames")
         
         # TODO: Process video
+        self.video_processing_results['textual_report'] = get_ai_textual_report(video_file_path.stem)
+
         end_time = time.time()
         delta_time = end_time - start_time
         logging.info(f"Processed video frames")
