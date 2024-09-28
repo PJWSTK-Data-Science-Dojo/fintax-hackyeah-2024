@@ -1,5 +1,6 @@
 import base64
 import os
+import sys
 
 import streamlit as st
 from dotenv import load_dotenv
@@ -87,9 +88,8 @@ def cached_analysis_response():
 
 def video_review():
     video_col, legend_col = st.columns([4, 1])
-    with video_col:
-        st_player(f"data:video/mp4;base64,{base64.b64encode(st.session_state.uploaded_video.getvalue()).decode()}")
 
+    with video_col:
         response = cached_analysis_response()
         frames = response['frames']
         color_list = [EMOTICON_MAP[frame['emotion']][1] for frame in frames]
@@ -121,6 +121,8 @@ def text_review():
 
 def analysis_review():
     st.title("Analysis Review")
+    
+    st.video(st.session_state.uploaded_video)
 
     video_tab, audio_tab, text_tab = st.tabs(["Video", "Audio", "Text"])
 

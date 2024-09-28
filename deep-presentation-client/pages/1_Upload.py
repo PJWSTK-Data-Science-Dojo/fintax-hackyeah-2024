@@ -16,15 +16,15 @@ def upload_video():
     uploaded_video = st.file_uploader("Prześlij film...", type=["mp4"])
 
     if uploaded_video:
+        st.session_state.uploaded_video = uploaded_video
+
         with st.spinner("Przeysyłanie filmu..."):
             video_uuid = create_video(video_buffer=uploaded_video)
 
         st.session_state.video_uuid = video_uuid
         if not video_uuid:
             st.error("Napotkaliśmy problem z przesłaniem filmu!")
-
         else:
-            st.session_state.uploaded_video = uploaded_video
             st.info("""
 Sukces!\n\n
 Udało się przesłać twój film i rozpoczęła się analiza twojego filmu! Przejdź do zakładki Analiza, żeby poznać wyniki!\n
@@ -33,7 +33,7 @@ Zostaniesz automatycznie przeniesiony za 10s.
             """)
 
             time.sleep(10)
-
+            print(st.session_state.uploaded_video)
             st.switch_page("pages/2_Analysis_Review.py")
 
 
