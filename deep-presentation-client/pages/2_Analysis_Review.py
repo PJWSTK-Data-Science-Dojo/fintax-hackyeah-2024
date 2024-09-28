@@ -1,3 +1,4 @@
+import base64
 import os
 
 import streamlit as st
@@ -83,15 +84,11 @@ def cached_analysis_response():
 #         timestamp_placeholder.text(f"Aktualna emocja: {get_emotion_from_timestamp(response, current_time)}")
 #
 
+
 def video_review():
-    if 'CURRENT_VIDEO_UUID' not in st.session_state:
-        st.write("No video selected for review.")
-        return
-
     video_col, legend_col = st.columns([4, 1])
-
     with video_col:
-        st_player("https://youtu.be/CmSKVW1v0xM")
+        st_player(f"data:video/mp4;base64,{base64.b64encode(st.session_state.uploaded_video.getvalue()).decode()}")
 
         response = cached_analysis_response()
         frames = response['frames']
@@ -138,7 +135,4 @@ def analysis_review():
 
 
 if __name__ == "__main__":
-    # Mock ze w sesji istnieje jakies video
-    st.session_state['CURRENT_VIDEO_UUID'] = "HY_2024_film_01"
-
     analysis_review()

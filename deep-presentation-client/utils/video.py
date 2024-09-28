@@ -4,7 +4,8 @@ from uuid import UUID, uuid4
 import os
 from dotenv import load_dotenv
 from utils import api
-load_dotenv()
+
+load_dotenv('.env.local')
 
 VIDEO_STORAGE = Path(os.getenv("VIDEO_STORAGE"))
 if not VIDEO_STORAGE.exists():
@@ -12,7 +13,6 @@ if not VIDEO_STORAGE.exists():
 
 
 def create_video(video_buffer: io.BytesIO) -> UUID:
-    video_uuid = uuid4()
     video_uuid = uuid4()
     uuid_catalog_path = VIDEO_STORAGE / str(video_uuid)
     uuid_catalog_path.mkdir(parents=True, exist_ok=True)

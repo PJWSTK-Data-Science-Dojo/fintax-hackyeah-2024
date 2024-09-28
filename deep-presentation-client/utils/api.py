@@ -12,6 +12,7 @@ load_dotenv()
 API_URL = os.getenv("API_URL")
 
 def add_video(video_uuid: UUID) -> bool:
+    return True
     url = f"{API_URL}/video"
     try:
         response = requests.post(url=url, data={
