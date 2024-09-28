@@ -1,63 +1,7 @@
-import functools
-import os
-
 from dotenv import load_dotenv
-import openai
-from openai.types.chat import ChatCompletion
 
 from utils.common import get_transcription
-
-
-@functools.cache
-def _get_openai_client():
-    return openai.OpenAI(
-        api_key=os.environ.get("OPENAI_KEY"),
-    )
-
-
-def get_openai_response(system_prompt: str, input: str, model: str="gpt-4o-mini") -> str:
-    client = _get_openai_client()
-
-    completion: ChatCompletion = client.chat.completions.create(
-        model=model,
-        messages=[
-            {
-                "role": "system",
-                "content": system_prompt,
-            },
-            {
-                "role": "user",
-                "content": f"Presentation excerpt: {input}" ,
-            }
-        ],
-    )
-
-    return _extract_model_respone(completion)
-
-
-def _extract_model_respone(completion: ChatCompletion) -> str:
-    finish_reason = completion.choices[0].finish_reason
-
-    if finish_reason == "stop":
-        response: str | None = completion.choices[0].message.content
-        if response:
-            return response.strip()
-        else:
-            return ""
-    else:
-        print("Wraning: finish_reason is not 'stop'.")
-        return ""
-
-
-def _extract_boolean_model_response(model_responce: str) -> bool:
-    match model_responce:
-        case "0":
-            return False
-        case "1":
-            return True
-        case _:
-            print("Error the model did not return neither true or false. Counting that as false")
-            return False
+from utils.openai import extract_boolean_model_response, get_openai_response
 
 
 def _get_ai_advice(text: str) -> str:
@@ -87,7 +31,7 @@ def _did_change_topics(text: str) -> bool:
                     '0', otherwise, if the speaker did change topics during the presentation, \
                     output '1'. Always respond with only one character (1 or 0)."
 
-    return _extract_boolean_model_response(get_openai_response(system_prompt, text))
+    return extract_boolean_model_response(get_openai_response(system_prompt, text))
 
 
 def _did_use_too_many_numbers(text: str) -> bool:
@@ -101,7 +45,7 @@ def _did_use_too_many_numbers(text: str) -> bool:
                     the speaker is allowed to use. Always respond with only one character \
                     (1 or 0)."
 
-    return _extract_boolean_model_response(get_openai_response(system_prompt, text))
+    return extract_boolean_model_response(get_openai_response(system_prompt, text))
 
 
 def _did_make_repetitions(text: str) -> bool:
@@ -113,7 +57,19 @@ def _did_make_repetitions(text: str) -> bool:
                     respond with '1', otherwise, if there are no repetitions, \
                     respond with '0'. Always respond with only one character (1 or 0)."
 
-    return _extract_boolean_model_response(get_openai_response(system_prompt, text))
+    return extract_boolean_model_response(get_openai_response(system_prompt, text))
+
+def _did_use_passive_voice(text: str) -> bool:
+    system_prompt = "You are an expert in presentation analysis and feedback. A user will \
+                    provide you with an excerpt from a presentation in Polish, which may start in the \
+                    middle or include only parts of the presentation. Your task is to \
+                    identify if the speaker used passive voice. \
+                    If the speaker did use passive voice in the presentation you should \
+                    respond with '1', otherwise, if the speaker did not use passive voice, \
+                    respond with '0'. Always respond with only one character (1 or 0)."
+
+    return extract_boolean_model_response(get_openai_response(system_prompt, text))
+
 
 
 def get_ai_textual_report(video_uuid):
@@ -125,5 +81,6 @@ def get_ai_textual_report(video_uuid):
     report_data["too_many_numbers_usesd"] = _did_use_too_many_numbers(text)
     report_data["chage_of_topic"] = _did_change_topics(text)
     report_data["repetitions"]= _did_make_repetitions(text)
+    report_data["passive_voice"]= _did_use_passive_voice(text)
 
     return report_data
