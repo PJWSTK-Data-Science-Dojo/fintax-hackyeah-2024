@@ -18,45 +18,45 @@ logging.basicConfig(level=logging.INFO, format="%(asctime)-s %(message)s")
 
 jobs = []
 workspace_dir = pathlib.Path(
-    "project/data"
+    "../test_data"
 )
 workspace_dir.mkdir(parents=True, exist_ok=True)
 
 
-@app.post("/analysis", tags=["Analysis"])
-# async def upload_video(video_file: UploadFile = File(...)):
-async def upload_video(request: Request):
+class VideoAnalysisState(BaseModel):
+    video_uuid: str = "0000-4444-0000-4444"
+
+@app.post("/video", tags=["Analysis"])
+async def upload_video(video_data: VideoAnalysisState):
     global jobs
-    json_data = await request.json()
     # Create a processing object
-    processor = Processing()
+    processor = Processing(video_data.video_uuid)
     jobs.append(processor)
 
     # Start the asynchronous processing and return the ID
     try:
-        process_id = await processor.start(video_file, workspace_dir)
+        process_id = await processor.start(video_data.video_uuid, workspace_dir)
     except Exception as e:
         raise HTTPException(status_code=503, detail=e)
     return {"process_id": process_id}
 
-
-@app.get("/analysis/stage/{process_id}")
-async def get_processing_status(process_id: str):
+@app.post("/analysis/audio")
+async def get_processing_status(video_data: VideoAnalysisState):
     global jobs
     for job in jobs:
-        if str(job.id) == process_id:
+        if str(job.id) == video_data.video_uuid:
             return await job.get_processing_stage()
     raise HTTPException(status_code=404, detail="Process not found.")
 
-@app.get("/analysis/data/{process_id}")
-async def get_processing_status(process_id: str):
+@app.post("/analysis/video")
+async def get_processing_status(video_data: VideoAnalysisState):
     global jobs
     for job in jobs:
-        if str(job.id) == process_id:
+        if str(job.id) == video_data.video_uuid:
             return job.get_processing_data()
     raise HTTPException(status_code=404, detail="Process not found.")
 
 
 # Run the FastAPI application on port 5000
-if __name__ == "__main__":
-  uvicorn.run("main:app", host="0.0.0.0", port=8080, reload=False, access_log=False)
+# if __name__ == "__main__":
+#   uvicorn.run("main:app", host="0.0.0.0", port=8080, reload=False, access_log=False)

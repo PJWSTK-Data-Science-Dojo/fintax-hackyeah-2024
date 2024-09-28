@@ -46,7 +46,6 @@ class Processing:
         # Generate a unique filename
         filename = self.id + ".mp4"
         self.process_workdir = pathlib.Path(workspace_dir, self.id)
-        self.process_workdir.mkdir(parents=True, exist_ok=False)
         self.video_path = pathlib.Path(self.process_workdir, filename)
         
         self.stages = [
@@ -78,3 +77,5 @@ class Processing:
             {"stage": "done_visual", "time": datetime.now().strftime("%H:%M:%S")}
         )
         logging.info(f"{self.stages[-1]['stage']} - {self.id}")
+        
+        # Processing data with llms 
