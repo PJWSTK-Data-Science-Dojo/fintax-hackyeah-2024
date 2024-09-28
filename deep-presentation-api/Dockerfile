@@ -24,4 +24,4 @@ RUN pip install --no-cache-dir -r requirements.txt
 COPY . .
 
 # Apply cron job and Set the entry point command
-CMD python3 cctv_recording/main.py
+CMD python3 src/main.py
