@@ -24,9 +24,10 @@ workspace_dir.mkdir(parents=True, exist_ok=True)
 
 
 @app.post("/analysis", tags=["Analysis"])
-async def upload_video(video_file: UploadFile = File(...)):
+# async def upload_video(video_file: UploadFile = File(...)):
+async def upload_video(request: Request):
     global jobs
-
+    json_data = await request.json()
     # Create a processing object
     processor = Processing()
     jobs.append(processor)

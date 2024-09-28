@@ -15,8 +15,8 @@ from uuid import uuid4
 
 
 class Processing:
-    def __init__(self):
-        self.id = str(uuid4())
+    def __init__(self, uuid_id):
+        self.id = uuid_id
         self.stages = [
             {
                 "stage": "started_initialized",
@@ -41,17 +41,14 @@ class Processing:
             "audio": self.audio_processing.audio_processing_results,
         }
 
-    async def start(self, video_file, workspace_dir):
+    async def start(self, video_file_name, workspace_dir):
 
         # Generate a unique filename
-        filename = self.id + "." + video_file.filename.split(".")[-1]
+        filename = self.id + ".mp4"
         self.process_workdir = pathlib.Path(workspace_dir, self.id)
         self.process_workdir.mkdir(parents=True, exist_ok=False)
-
-        # Save the uploaded video to a specified directory
         self.video_path = pathlib.Path(self.process_workdir, filename)
-        with open(self.video_path, "wb") as file:
-            file.write(await video_file.read())
+        
         self.stages = [
             {"stage": "done_initialized", "time": datetime.now().strftime("%H:%M:%S")}
         ]
@@ -81,11 +78,3 @@ class Processing:
             {"stage": "done_visual", "time": datetime.now().strftime("%H:%M:%S")}
         )
         logging.info(f"{self.stages[-1]['stage']} - {self.id}")
-
-    def ask_llm(self, query):
-        return query_llm(
-            self.audio_processing.audio_vector_store,
-            self.vision_processing.video_vector_store,
-            600,
-            query,
-        )
