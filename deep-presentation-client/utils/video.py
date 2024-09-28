@@ -13,14 +13,15 @@ if not VIDEO_STORAGE.exists():
 
 
 def create_video(video_buffer: io.BytesIO) -> UUID:
-    video_uuid = uuid4()
+    # video_uuid = uuid4()
+    video_uuid = "0000-4444-0000-4444"
     uuid_catalog_path = VIDEO_STORAGE / str(video_uuid)
     uuid_catalog_path.mkdir(parents=True, exist_ok=True)
 
     uuid_video_path = uuid_catalog_path / f"{video_uuid}.mp4"
 
-    with uuid_video_path.open(mode="wb") as f:
-        f.write(video_buffer.getbuffer())
+    # with uuid_video_path.open(mode="wb") as f:
+    #     f.write(video_buffer.getbuffer())
 
     success = api.add_video(video_uuid=video_uuid)
     if not success:

@@ -7,11 +7,18 @@ services:
     ports:
       - "8051:8051"         # Exposing frontend on port 3000 (change if necessary)
     volumes:
-      - ./shared:/app/shared # Mounts shared directory to /app/shared in backend container
+      - ./shared:/app/shared:rw # Mounts shared directory to /app/shared in backend container
+    environment:
+      - API_URL=http://api:8080
+      - VIDEO_STORAGE=/app/shared
   api:
     build:
       context: ./deep-presentation-api    # Path to your backend Dockerfile
     ports:
-      - "8080:8080"         # Exposing backend on port 8000 (adjust as necessary)
+      - "8080:8080"
     volumes:
-      - ./shared:/app/shared # Mounts shared directory to /app/shared in backend container
+      - ./shared:/app/shared:rw # Mounts shared directory to /app/shared in backend container
+    environment:
+      - OPENAI_API_KEY=sk-...
+      - WHISPERX_API=http://
+      - VIDEO_STORAGE=/app/shared

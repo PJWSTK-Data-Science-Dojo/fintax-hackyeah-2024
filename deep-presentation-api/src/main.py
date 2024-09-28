@@ -17,10 +17,10 @@ app = FastAPI()
 logging.basicConfig(level=logging.INFO, format="%(asctime)-s %(message)s")
 
 jobs = []
-workspace_dir = pathlib.Path(
-    "../test_data"
+VIDEO_STORAGE = pathlib.Path(
+    os.getenv("VIDEO_STORAGE")
 )
-workspace_dir.mkdir(parents=True, exist_ok=True)
+VIDEO_STORAGE.mkdir(parents=True, exist_ok=True)
 
 
 class VideoAnalysisState(BaseModel):
@@ -30,7 +30,7 @@ from fastapi.responses import FileResponse
 import os
 @app.get("/video/cc/{process_uuid}")
 async def download_subtitles(process_uuid: str = "0000-4444-0000-4444"):
-    file_path = pathlib.Path(f"../test_data/{process_uuid}/{process_uuid}.srt")
+    file_path = pathlib.Path(f"{VIDEO_STORAGE}/{process_uuid}/{process_uuid}.srt")
     if file_path.exists():
         return FileResponse(path=file_path, filename=os.path.basename(file_path), media_type='application/octet-stream')
     else:
@@ -38,7 +38,7 @@ async def download_subtitles(process_uuid: str = "0000-4444-0000-4444"):
 
 @app.get("/video/{process_uuid}")
 async def download_file(process_uuid: str):
-    file_path = pathlib.Path(f"../test_data/{process_uuid}/{process_uuid}.mp4")
+    file_path = pathlib.Path(f"{VIDEO_STORAGE}/{process_uuid}/{process_uuid}.mp4")
     if file_path.exists():
         return FileResponse(path=file_path, filename=os.path.basename(file_path), media_type='application/octet-stream')
     else:
@@ -56,7 +56,7 @@ async def upload_video(video_data: VideoAnalysisState):
 
     # Start the asynchronous processing and return the ID
     try:
-        process_id = await processor.start(video_data.video_uuid, workspace_dir)
+        process_id = await processor.start(video_data.video_uuid, VIDEO_STORAGE)
     except Exception as e:
         raise HTTPException(status_code=503, detail=e)
     return {"process_id": process_id}

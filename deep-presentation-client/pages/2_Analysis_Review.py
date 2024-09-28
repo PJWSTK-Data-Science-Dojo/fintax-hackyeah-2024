@@ -115,16 +115,11 @@ def text_review():
 def analysis_review():
     st.title("Analysis Review")
 
-    if 'uploaded_video' not in st.session_state or not st.session_state.uploaded_video:
-        st.switch_page("pages/1_Upload.py")
-
-    st.video(st.session_state.uploaded_video, format='video/mp4', start_time=0)
-
     if "video_uuid" not in st.session_state or not st.session_state.video_uuid:
         st.switch_page("pages/1_Upload.py")
 
     subtitles = api.fetch_subtitles(st.session_state.video_uuid)
-    
+    print(subtitles)
     st.video(st.session_state.uploaded_video, subtitles=subtitles)
 
     video_tab, audio_tab, text_tab = st.tabs(["Video", "Mowa", "Pełna analiza"])
