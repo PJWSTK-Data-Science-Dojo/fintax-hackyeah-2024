@@ -33,7 +33,7 @@ Zostaniesz automatycznie przeniesiony za 10s.
             """)
 
             time.sleep(10)
-            print(st.session_state.uploaded_video)
+
             st.switch_page("pages/2_Analysis_Review.py")
 
 

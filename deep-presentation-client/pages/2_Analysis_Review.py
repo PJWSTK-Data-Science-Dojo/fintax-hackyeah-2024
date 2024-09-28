@@ -1,28 +1,23 @@
-import base64
 import os
-import sys
 
 import streamlit as st
 from dotenv import load_dotenv
-from streamlit_player import st_player
 
 load_dotenv('.env.local')
 
 API_URL = os.getenv('API_URL')
 VIDEO_STORAGE = os.getenv('VIDEO_STORAGE')
 
-# for emotion, (emoticon, color) in EMOTICON_MAP.items():
 EMOTICON_MAP = {
-    'angry': ('😡', '#FF5733'),
-    'disgust': ('🤢', '#8DFF33'),
-    'fear': ('😨', '#33FFF5'),
-    'happy': ('😃', '#FFE333'),
-    'sad': ('😢', '#335BFF'),
-    'surprise': ('😮', '#FF33EC'),
-    'neutral': ('😐', '#A6A6A6'),
-    None: ('😐', '#A6A6A6')
+    'angry': ('😡', '#FF6B6B'),
+    'disgust': ('🤢', '#9ACD32'),
+    'fear': ('😨', '#5DADE2'),
+    'happy': ('😃', '#F4D03F'),
+    'sad': ('😢', '#5B9BD5'),
+    'surprise': ('😮', '#FFB6C1'),
+    'neutral': ('😐', '#C0C0C0'),
+    None: ('😐', '#E0E0E0')
 }
-
 
 def mock_analysis_response():
     return {
@@ -68,47 +63,43 @@ def cached_analysis_response():
     return mock_analysis_response()
 
 
-# def st_player_with_timestamp(url, height=None, progress_interval=1000):
-#     timestamp_placeholder = st.empty()
-#
-#     options = {
-#         "events": ["onProgress"],
-#         "progress_interval": progress_interval,
-#         "height": height
-#     }
-#
-#     event = st_player(url, **options)
-#     response = cached_analysis_response()
-#
-#     if event and isinstance(event, tuple) and len(event) > 1 and event[0] == 'onProgress':
-#         current_time = int(event[1].get('playedSeconds', 0))
-#         timestamp_placeholder.text(f"Aktualna emocja: {get_emotion_from_timestamp(response, current_time)}")
-#
-
-
-def video_review():
-    video_col, legend_col = st.columns([4, 1])
-
+def render_emotions_and_legend(video_col):
     with video_col:
         response = cached_analysis_response()
         frames = response['frames']
         color_list = [EMOTICON_MAP[frame['emotion']][1] for frame in frames]
 
-        color_bar_html = '<div style="display: flex; width: 100%; height: 30px; margin-top: 10px;">'
-        for color in color_list:
-            color_bar_html += f'<div style="flex: 1; background-color: {color};"></div>'
-        color_bar_html += '</div>'
+        # Render the emotion color bar
+        bar_container = st.container()
+        with bar_container:
+            st.markdown('<div style="margin-top: 20px;"></div>', unsafe_allow_html=True)
+            color_bar_html = '<div style="display: flex; justify-content: center; align-items: center; width: 700px;">'
+            for color in color_list:
+                color_bar_html += f'<div style="flex: 1; height: 50px; background-color: {color};"></div>'
+            color_bar_html += '</div>'
+            st.markdown(color_bar_html, unsafe_allow_html=True)
 
-        st.markdown(color_bar_html, unsafe_allow_html=True)
+        # Render the legend
+        legend_container = st.container()
+        with legend_container:
+            st.markdown('<div style="margin-top: 20px;"></div>', unsafe_allow_html=True)  # Add some margin
+            legend_html = '<div style="display: flex; justify-content: center; flex-wrap: wrap; gap: 10px; width: 700px;">'  # Set the fixed width to match the video
+            for emotion, (emoticon, color) in EMOTICON_MAP.items():
+                if emotion is None:
+                    continue
+                legend_html += (
+                    f'<div style="background-color: {color}; padding: 10px 15px; border-radius: 5px; display: flex; align-items: center; '
+                    f'justify-content: center; height: 50px; min-width: 80px; margin: 5px;">'
+                    f'{emoticon} - {emotion.capitalize()}'
+                    '</div>'
+                )
+            legend_html += '</div>'
+            st.markdown(legend_html, unsafe_allow_html=True)
 
-    with legend_col:
-        for emotion, (emoticon, color) in EMOTICON_MAP.items():
-            if emotion is None:
-                continue
-            st.write(f"{emoticon} - {emotion.capitalize() if emotion else 'Neutral'}")
-            st.markdown(
-                f'<div style="background-color:{color}; width: 80%; height: 30px; border-radius: 5px; margin-bottom: 5px;"></div>',
-                unsafe_allow_html=True)
+
+def video_review():
+    video_col, _ = st.columns([4, 1])
+    render_emotions_and_legend(video_col)
 
 
 def audio_review():
@@ -121,8 +112,11 @@ def text_review():
 
 def analysis_review():
     st.title("Analysis Review")
-    
-    st.video(st.session_state.uploaded_video)
+
+    if 'uploaded_video' not in st.session_state or not st.session_state.uploaded_video:
+        st.switch_page("pages/1_Upload.py")
+
+    st.video(st.session_state.uploaded_video, format='video/mp4', start_time=0)
 
     video_tab, audio_tab, text_tab = st.tabs(["Video", "Audio", "Text"])
 
