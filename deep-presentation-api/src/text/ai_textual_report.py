@@ -15,6 +15,26 @@ def _get_openai_client():
     )
 
 
+def get_openai_response(system_prompt: str, input: str, model: str="gpt-4o-mini") -> str:
+    client = _get_openai_client()
+
+    completion: ChatCompletion = client.chat.completions.create(
+        model=model,
+        messages=[
+            {
+                "role": "system",
+                "content": system_prompt,
+            },
+            {
+                "role": "user",
+                "content": f"Presentation excerpt: {input}" ,
+            }
+        ],
+    )
+
+    return _extract_model_respone(completion)
+
+
 def _extract_model_respone(completion: ChatCompletion) -> str:
     finish_reason = completion.choices[0].finish_reason
 
@@ -41,15 +61,7 @@ def _extract_boolean_model_response(model_responce: str) -> bool:
 
 
 def _get_ai_advice(text: str) -> str:
-    client = _get_openai_client()
-
-    completion: ChatCompletion = client.chat.completions.create(
-        model="gpt-4o-mini",
-        messages=[
-            {
-                "role": "system",
-
-                "content": "You are an expert in presentation analysis and feedback. A user will \
+    system_prompt = "You are an expert in presentation analysis and feedback. A user will \
                     provide you with an excerpt from a presentation in Polish, which may start in the \
                     middle or include only parts of the presentation. Your task is to: \
                     Identify what went well in the presentation excerpt – this includes strengths \
@@ -62,54 +74,24 @@ def _get_ai_advice(text: str) -> str:
                     delivery of the content. Also take into cosideration if the speaker switched topics \
                     throughout the presentation and if too many numbers were used. The response should be \
                     short and concise. Your should always respond in Polish."
-            },
-            {
-                "role": "user",
-                "content": f"Presentation excerpt: {text}" ,
-            }
-        ],
-    )
 
-    return _extract_model_respone(completion)
+    return get_openai_response(system_prompt, text)
 
 
 def _did_change_topics(text: str) -> bool:
-    client = _get_openai_client()
-
-    completion = client.chat.completions.create(
-        model="gpt-4o-mini",
-        messages=[
-            {
-                "role": "system",
-
-                "content": "You are an expert in presentation analysis and feedback. A user will \
+    system_prompt = "You are an expert in presentation analysis and feedback. A user will \
                     provide you with an excerpt from a presentation in Polish, which may start in the \
                     middle or include only parts of the presentation. Your task is to \
                     identify if the speaker changed topics during the presentation. \
                     If the speaker did not change topics during the presentation output \
                     '0', otherwise, if the speaker did change topics during the presentation, \
                     output '1'. Always respond with only one character (1 or 0)."
-            },
-            {
-                "role": "user",
-                "content": f"Presentation excerpt: {text}" ,
-            }
-        ],
-    )
 
-    return _extract_boolean_model_response(_extract_model_respone(completion))
+    return _extract_boolean_model_response(get_openai_response(system_prompt, text))
 
 
 def _did_use_too_many_numbers(text: str) -> bool:
-    client = _get_openai_client()
-
-    completion = client.chat.completions.create(
-        model="gpt-4o-mini",
-        messages=[
-            {
-                "role": "system",
-
-                "content": "You are an expert in presentation analysis and feedback. A user will \
+    system_prompt = "You are an expert in presentation analysis and feedback. A user will \
                     provide you with an excerpt from a presentation in Polish, which may start in the \
                     middle or include only parts of the presentation. Your task is to \
                     identify if there are too many numbers used in the presentation. \
@@ -118,42 +100,20 @@ def _did_use_too_many_numbers(text: str) -> bool:
                     many numbers, respond with '0'. Be liberal with the ammount of numbers \
                     the speaker is allowed to use. Always respond with only one character \
                     (1 or 0)."
-            },
-            {
-                "role": "user",
-                "content": f"Presentation excerpt: {text}" ,
-            }
-        ],
-    )
 
-    return _extract_boolean_model_response(_extract_model_respone(completion))
+    return _extract_boolean_model_response(get_openai_response(system_prompt, text))
 
 
 def _did_make_repetitions(text: str) -> bool:
-    client = _get_openai_client()
-
-    completion = client.chat.completions.create(
-        model="gpt-4o-mini",
-        messages=[
-            {
-                "role": "system",
-
-                "content": "You are an expert in presentation analysis and feedback. A user will \
+    system_prompt = "You are an expert in presentation analysis and feedback. A user will \
                     provide you with an excerpt from a presentation in Polish, which may start in the \
                     middle or include only parts of the presentation. Your task is to \
                     identify if there are repetitions in the presentation. \
                     If there are repetitions in the presentation you should \
                     respond with '1', otherwise, if there are no repetitions, \
                     respond with '0'. Always respond with only one character (1 or 0)."
-            },
-            {
-                "role": "user",
-                "content": f"Presentation excerpt: {text}" ,
-            }
-        ],
-    )
 
-    return _extract_boolean_model_response(_extract_model_respone(completion))
+    return _extract_boolean_model_response(get_openai_response(system_prompt, text))
 
 
 def get_ai_textual_report(video_uuid):
