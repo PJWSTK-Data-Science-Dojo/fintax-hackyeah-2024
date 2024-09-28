@@ -6,7 +6,8 @@ import subprocess
 import logging
 import time
 import json
-
+from src.audio.find_similiar_sentences_transcription import find_similiar_sentences
+from src.audio.indexes import indexes_scoring
 
 
 
@@ -91,7 +92,10 @@ class AudioProcessing:
         # whisperx_inf = whisperx_endpoint()
         # transcription = whisperx_inf.inference(wav_audio_path)
         # if transcription is None:
-        #     raise RuntimeError("Transcription failed")
+            #     raise RuntimeError("Transcription failed")
+        similar_sentences_after_each_other = find_similiar_sentences(transcription)
+        indexes = indexes_scoring(transcription)
+        
         logging.info("Transcription done")
 
         # Generate Loud / Silent labels
@@ -105,5 +109,7 @@ class AudioProcessing:
 
         self.audio_processing_results = {
             "transcription": transcription,
+            "similar_sentences_after_each_other": similar_sentences_after_each_other,
+            "indexes": indexes
             # "loudness": loudness_data,
         }

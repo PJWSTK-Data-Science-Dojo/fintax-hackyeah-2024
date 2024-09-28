@@ -1,0 +1,1 @@
+# def calc_too_fast(transcription, speed_treshold_per_word: 0.35)
