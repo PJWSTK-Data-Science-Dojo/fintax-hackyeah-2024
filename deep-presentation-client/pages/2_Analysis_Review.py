@@ -3,6 +3,8 @@ import os
 import streamlit as st
 from dotenv import load_dotenv
 
+from utils import api
+
 load_dotenv('.env.local')
 
 API_URL = os.getenv('API_URL')
@@ -103,11 +105,11 @@ def video_review():
 
 
 def audio_review():
-    pass
+    data = api.fetch_audio_analysis()
 
 
 def text_review():
-    pass
+    data = api.fetch_full_analysis()
 
 
 def analysis_review():
@@ -118,7 +120,14 @@ def analysis_review():
 
     st.video(st.session_state.uploaded_video, format='video/mp4', start_time=0)
 
-    video_tab, audio_tab, text_tab = st.tabs(["Video", "Audio", "Text"])
+    if "video_uuid" not in st.session_state or not st.session_state.video_uuid:
+        st.switch_page("pages/1_Upload.py")
+
+    subtitles = api.fetch_subtitles(st.session_state.video_uuid)
+    
+    st.video(st.session_state.uploaded_video, subtitles=subtitles)
+
+    video_tab, audio_tab, text_tab = st.tabs(["Video", "Mowa", "Pełna analiza"])
 
     with video_tab:
         video_review()
