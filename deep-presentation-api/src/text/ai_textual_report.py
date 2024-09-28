@@ -1,12 +1,10 @@
+import functools
+import json
+import os
+
+from dotenv import load_dotenv
 import openai
 from openai.types.chat import ChatCompletion
-import os
-import json
-import functools
-
-# TODO move
-from dotenv import load_dotenv
-load_dotenv()
 
 
 def _get_transcription(video_uuid) -> str:
@@ -167,6 +165,7 @@ def _did_make_repetitions(text: str) -> bool:
 
 
 def get_ai_textual_report(video_uuid):
+    load_dotenv()
     text = _get_transcription(video_uuid)
 
     report_data = {}
