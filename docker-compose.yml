@@ -1,0 +1,17 @@
+version: '3.8'
+
+services:
+  client:
+    build:
+      context: ./deep-presentation-client   # Path to your frontend Dockerfile
+    ports:
+      - "8051:8051"         # Exposing frontend on port 3000 (change if necessary)
+    volumes:
+      - ./shared:/app/shared # Mounts shared directory to /app/shared in backend container
+  api:
+    build:
+      context: ./deep-presentation-api    # Path to your backend Dockerfile
+    ports:
+      - "8080:8080"         # Exposing backend on port 8000 (adjust as necessary)
+    volumes:
+      - ./shared:/app/shared # Mounts shared directory to /app/shared in backend container
