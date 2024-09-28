@@ -1,5 +1,3 @@
-from dotenv import load_dotenv
-
 from utils.common import get_transcription
 from utils.openai import extract_boolean_model_response, get_openai_response
 
@@ -73,7 +71,6 @@ def _did_use_passive_voice(text: str) -> bool:
 
 
 def get_ai_textual_report(video_uuid):
-    load_dotenv()
     text = get_transcription(video_uuid)
 
     report_data = {}
