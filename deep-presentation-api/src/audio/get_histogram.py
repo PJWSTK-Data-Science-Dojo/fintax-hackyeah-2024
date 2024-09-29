@@ -1,23 +1,21 @@
+import os
+import pathlib
+
 import numpy as np
 from scipy.io import wavfile
-import pathlib
-import os
 
 VIDEO_STORAGE = pathlib.Path(os.getenv("VIDEO_STORAGE", "test_data"))
 
 def get_histogram(video_uuid):
     path = pathlib.Path(VIDEO_STORAGE, f"{video_uuid}/{video_uuid}.wav")
-    sample_rate, data = wavfile.read(path)
+    sample_rate, signal = wavfile.read(path)
 
-    # Check if the audio is stereo or mono
-    if len(data.shape) > 1:
-        # Stereo audio, select one channel or average both
-        data = data.mean(axis=1)  # Averaging both channels
+    if len(signal.shape) > 1:
+        signal = signal.mean(axis=1)
 
-    #  Normalize the data
-    data = data / np.max(np.abs(data))
+    signal = signal / np.max(np.abs(signal))
 
     return {
         "sample_rate": sample_rate,
-        "histogram_data": data
+        "histogram_data": signal
     }
