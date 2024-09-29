@@ -48,8 +48,8 @@ def fetch_subtitles(video_uuid: UUID) -> io.BytesIO:
     return io.BytesIO()
 
 
-def fetch_video_analysis(video_uuid: UUID) -> dict | None:
-    url = f"{API_URL}/analysis/video"
+def fetch_analysis_stage(video_uuid: UUID) -> dict | None:
+    url = f"{API_URL}/analysis/stage"
 
     try:
         response = requests.post(url=url, json={
@@ -66,8 +66,8 @@ def fetch_video_analysis(video_uuid: UUID) -> dict | None:
     return None
 
 
-def fetch_audio_analysis(video_uuid: UUID) -> dict | None:
-    url = f"{API_URL}/analysis/audio"
+def fetch_analysis_data(video_uuid: UUID) -> dict | None:
+    url = f"{API_URL}/analysis/data"
 
     try:
         response = requests.post(url=url, json={
