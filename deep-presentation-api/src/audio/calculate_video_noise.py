@@ -26,4 +26,6 @@ def get_nsr(video_uuid):
     if signal.ndim == 2:
         signal = signal.mean(axis=1)
 
-    return _calculate_snr(signal)
+    ret = _calculate_snr(signal)
+
+    return {"snr": ret}

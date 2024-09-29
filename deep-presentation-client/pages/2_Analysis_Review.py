@@ -8,6 +8,7 @@ import streamlit as st
 from dotenv import load_dotenv
 
 from utils import api
+from utils.common import initialize
 
 load_dotenv()
 
@@ -400,4 +401,5 @@ def analysis_review():
 
 
 if __name__ == "__main__":
+    initialize("NoHome")
     analysis_review()
