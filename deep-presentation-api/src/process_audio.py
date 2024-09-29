@@ -1,3 +1,4 @@
+import os
 import pathlib
 import requests
 import librosa
@@ -10,6 +11,25 @@ from audio.find_similiar_sentences_transcription import find_similiar_sentences
 from audio.indexes import indexes_scoring
 from audio.srt_gen import gen_srt_file
 
+
+def whisperx_inference(audio_file_path):
+    url = os.getenv("WHISPERX_API") + "/transcribe"
+    # Open the audio file in binary mode and send it via a POST request
+    with open(audio_file_path, "rb") as audio_file:
+        # Prepare the files parameter for the POST request
+        files = {
+            "file": (audio_file_path, audio_file, "audio/wav")
+        }
+
+        # Send the request to the FastAPI server
+        response = requests.post(url, files=files)
+
+        # Check if the request was successful
+        if response.status_code == 200:
+            # Print the transcription result from the API response
+            print("Transcription result:", response.json())
+        else:
+            print("Error:", response.status_code, response.text)
 
 def analyze_audio(file_path):
     """Analyzes an audio file for loudness and returns a list of chunks with loudness values.
@@ -93,10 +113,10 @@ class AudioProcessing:
         gen_srt_file(transcription, video_path.with_suffix(".srt"))
         self.audio_processing_results['srt_ready'] = True
 
-        # whisperx_inf = whisperx_endpoint()
-        # transcription = whisperx_inf.inference(wav_audio_path)
-        # if transcription is None:
-            #     raise RuntimeError("Transcription failed")
+        transcription = whisperx_inference(wav_audio_path)
+
+        if transcription is None:
+            raise RuntimeError("Transcription failed")
         logging.info("Transcription done")
 
         # Generate Loud / Silent labels
