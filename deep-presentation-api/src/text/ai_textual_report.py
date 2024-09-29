@@ -89,6 +89,7 @@ def _get_target_audience(text: str) -> str:
 
     return get_openai_response(system_prompt, text)
 
+
 def _get_revised_presentation(text: str) -> str:
     system_prompt = "You are an expert in presentation analysis and feedback. A user will \
                     provide you with an excerpt from a presentation in Polish, which may start in the \
@@ -101,6 +102,14 @@ def _get_revised_presentation(text: str) -> str:
 
     return get_openai_response(system_prompt, text)
 
+
+def _get_translated_presentation(text: str) -> str:
+    system_prompt = "You are an expert in presentation analysis, feedback and translation. A user will \
+                    provide you with an excerpt from a presentation in Polish, which may start in the \
+                    middle or include only parts of the presentation. Your task is to \
+                    translate the given excerpt to English."
+
+    return get_openai_response(system_prompt, text)
 
 
 def get_ai_textual_report(video_uuid):
@@ -115,5 +124,6 @@ def get_ai_textual_report(video_uuid):
     report_data["further_questions"] = _get_further_questions(text)
     report_data["target_audienc"] = _get_target_audience(text)
     report_data["revised_presentation"] = _get_revised_presentation(text)
+    report_data["translated_presentation"] = _get_translated_presentation(text)
 
     return report_data
