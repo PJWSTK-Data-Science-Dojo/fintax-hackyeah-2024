@@ -7,12 +7,6 @@ from utils.common import initialize
 
 load_dotenv()
 
-st.set_page_config(
-    page_icon="🔬",
-    layout="wide",
-    initial_sidebar_state="expanded",
-)
-
 def upload_video():
     if upload_video not in st.session_state:
         st.session_state.uploaded_video = None

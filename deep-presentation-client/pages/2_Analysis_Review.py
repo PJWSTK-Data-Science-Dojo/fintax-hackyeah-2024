@@ -3,20 +3,15 @@ import time
 from pathlib import Path
 
 import numpy as np
-import plotly.express as px
 import streamlit as st
 from dotenv import load_dotenv
-
+import plotly.express as px
 from utils import api
 from utils.common import initialize
 
 load_dotenv()
 
-st.set_page_config(
-    page_icon="🔬",
-    layout="wide",
-    initial_sidebar_state="expanded",
-)
+initialize("NoHome")
 
 API_URL = os.getenv('API_URL')
 VIDEO_STORAGE = os.getenv('VIDEO_STORAGE')
@@ -290,7 +285,8 @@ def render_pauses_data(pauses, video_duration):
 
     st.markdown(color_bar_html, unsafe_allow_html=True)
 
-    break_lengths = [pause['break_length'] for pause in pauses if 'break_length' in pause and pause['break_length'] is not None]
+    break_lengths = [pause['break_length'] for pause in pauses if
+                     'break_length' in pause and pause['break_length'] is not None]
 
     if break_lengths:
         average_pause_length = np.mean(break_lengths)
@@ -314,6 +310,7 @@ def render_audio_snr(video_analysis):
     st.markdown("### 📶 Wskaźnik SNR (Signal-to-Noise Ratio)")
     st.metric(label="SNR", value=f"{snr_value:.2f} dB")
 
+
 def render_fog_and_flesch(fog, flesch):
     if fog is None or flesch is None:
         return
@@ -322,9 +319,10 @@ def render_fog_and_flesch(fog, flesch):
     col1.metric("Indeks czytelności Flescha", f"{flesch:.2f}")
     col2.metric("Indeks mglistości FOG", f"{fog:.2f}")
 
+
 def audio_review(video_analysis):
     pauses = video_analysis['video']['pauses_data']
-    histogram_data = video_analysis['video']['histogram_data']['histogram_data']
+    histogram_data = video_analysis['video']['histogram_data']
     video_length = len(video_analysis['video']['emotions_report']['frames'])
     render_pauses_data(pauses, video_length)
     render_audio_histogram(histogram_data)
@@ -367,7 +365,6 @@ def full_review(video_analysis):
 
 
 def analysis_review():
-
     st.title("Analiza filmu")
 
     if "video_uuid" not in st.session_state or not st.session_state.video_uuid:
@@ -387,7 +384,6 @@ def analysis_review():
     with st.spinner("Pobieranie napisów..."):
         while not subtitles_path.exists():
             time.sleep(2)
-
 
     st.video(st.session_state.uploaded_video, subtitles={
         "Polish": subtitles_path
