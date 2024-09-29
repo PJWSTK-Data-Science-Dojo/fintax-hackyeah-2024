@@ -23,6 +23,7 @@ EMOTICON_MAP = {
     None: ('😐', '#C0C0C0', 'Neutralny')
 }
 
+
 def render_emotions_and_legend(video_col, emotions_frames):
     with video_col:
         color_list = [EMOTICON_MAP[frame['emotion']][1] for frame in emotions_frames]
@@ -55,9 +56,34 @@ def render_emotions_and_legend(video_col, emotions_frames):
             st.markdown(legend_html, unsafe_allow_html=True)
 
 
+def render_textual_analysis(video_col, textual_report):
+    with video_col:
+        st.markdown("### Raport analizy tekstowej")
+
+        # AI Advice
+        st.markdown("**Porady AI:**")
+        st.markdown(textual_report.get('ai_advice', 'Brak porad AI.'))
+
+        # Flags
+        st.markdown("Znalezione błędy:")
+        st.checkbox("Użyto zbyt wielu liczb", value=textual_report.get('too_many_numbers_usesd', False), disabled=True)
+        st.checkbox("Wykryto zmianę tematu", value=textual_report.get('chage_of_topic', False), disabled=True)
+        st.checkbox("Wykryto powtórzenia", value=textual_report.get('repetitions', False), disabled=True)
+        st.checkbox("Użyto strony biernej", value=textual_report.get('passive_voice', False), disabled=True)
+
+        # Further Questions
+        st.markdown("**Dalsze pytania do rozważenia:**")
+        st.markdown(textual_report.get('further_questions', 'Brak pytań.'))
+
+        # Target Audience
+        st.markdown(f"**Grupa docelowa:** {textual_report.get('target_audienc', 'Nie określono')}")
+
+
 def video_review(video_analysis):
     video_col = st.columns(1)[0]
     render_emotions_and_legend(video_col, video_analysis['video']['emotions_report']['frames'])
+
+    render_textual_analysis(video_col, video_analysis['video']['textual_report'])
 
 
 def audio_review():
@@ -93,8 +119,8 @@ def analysis_review():
     print(subtitles_path)
     print(subtitles_path.exists())
     st.video(st.session_state.uploaded_video, subtitles={
-        "Polish": f"{VIDEO_STORAGE }/{st.session_state.video_uuid}/{st.session_state.video_uuid}.srt"
-        })
+        "Polish": f"{VIDEO_STORAGE}/{st.session_state.video_uuid}/{st.session_state.video_uuid}.srt"
+    })
 
     video_tab, audio_tab, text_tab = st.tabs(["Video", "Mowa", "Pełna analiza"])
 
