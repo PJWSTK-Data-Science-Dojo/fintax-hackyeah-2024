@@ -20,5 +20,10 @@ services:
       - ./shared:/app/shared:rw # Mounts shared directory to /app/shared in backend container
     environment:
       - OPENAI_API_KEY=sk-...
-      - WHISPERX_API=http://
+      - WHISPERX_API=http://whisperx_api:8081
       - VIDEO_STORAGE=/app/shared
+  whisperx_api:
+    build:
+      context: ./whisperx-fin    # Path to your backend Dockerfile
+    ports:
+      - "8081:8080"
