@@ -91,7 +91,7 @@ def render_emotions_and_legend(video_col):
                     continue
                 legend_html += (
                     f'<div style="background-color: {color}; padding: 10px 15px; border-radius: 5px; display: flex; align-items: center; '
-                    f'justify-content: center; height: 50px; min-width: 80px; margin: 5px;">'
+                    f'justify-content: center; height: 50px; min-width: 80px; margin: 5px; color: black">'
                     f'{emoticon} - {emotion.capitalize()}'
                     '</div>'
                 )
@@ -105,11 +105,13 @@ def video_review():
 
 
 def audio_review():
-    data = api.fetch_audio_analysis()
+    video_uuid = "0000-4444-0000-4444"
+    data = api.fetch_audio_analysis(video_uuid)
 
 
 def text_review():
-    data = api.fetch_full_analysis()
+    video_uuid = "0000-4444-0000-4444"
+    data = api.fetch_full_analysis(video_uuid)
 
 
 def analysis_review():
