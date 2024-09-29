@@ -4,13 +4,13 @@ from typing import Dict, List
 from utils.common import get_transcription
 
 
-def _get_ner():
+def _get_ner_model():
     return spacy.load("pl_core_news_sm")
 
 
-def compute_ner(video_uuid) -> Dict[str, List[str]]:
+def get_ner(video_uuid) -> Dict[str, List[str]]:
     input: str = get_transcription(video_uuid)
-    ner_model = _get_ner()
+    ner_model = _get_ner_model()
 
     works_of_art, people, phrases = [], [], []
 
