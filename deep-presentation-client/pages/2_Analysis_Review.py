@@ -76,7 +76,7 @@ def render_emotions_and_legend(video_col):
         bar_container = st.container()
         with bar_container:
             st.markdown('<div style="margin-top: 20px;"></div>', unsafe_allow_html=True)
-            color_bar_html = '<div style="display: flex; justify-content: center; align-items: center; width: 700px;">'
+            color_bar_html = '<div style="display: flex; justify-content: center; align-items: center; width: 100%;">'
             for color in color_list:
                 color_bar_html += f'<div style="flex: 1; height: 50px; background-color: {color};"></div>'
             color_bar_html += '</div>'
@@ -86,13 +86,13 @@ def render_emotions_and_legend(video_col):
         legend_container = st.container()
         with legend_container:
             st.markdown('<div style="margin-top: 20px;"></div>', unsafe_allow_html=True)  # Add some margin
-            legend_html = '<div style="display: flex; justify-content: center; flex-wrap: wrap; gap: 10px; width: 700px;">'  # Set the fixed width to match the video
+            legend_html = '<div style="display: flex; justify-content: center; flex-wrap: wrap; gap: 10px; width: 100%;">'  # Set the fixed width to match the video
             for emotion, (emoticon, color) in EMOTICON_MAP.items():
                 if emotion is None:
                     continue
                 legend_html += (
                     f'<div style="background-color: {color}; padding: 10px 15px; border-radius: 5px; display: flex; align-items: center; '
-                    f'justify-content: center; height: 50px; min-width: 80px; margin: 5px; color: black">'
+                    f'justify-content: center; height: 50px; min-width: 100px; margin: 5px; color: black">'
                     f'{emoticon} - {emotion.capitalize()}'
                     '</div>'
                 )
@@ -101,7 +101,7 @@ def render_emotions_and_legend(video_col):
 
 
 def video_review():
-    video_col, _ = st.columns([4, 1])
+    video_col = st.columns(1)[0]
     render_emotions_and_legend(video_col)
 
 
