@@ -35,7 +35,7 @@ class Processing:
             "stages": self.stages,
         }
 
-    def get_processing_data(self):
+    async def get_processing_data(self):
         return {
             "video": self.vision_processing.video_processing_results,
             "audio": self.audio_processing.audio_processing_results,
