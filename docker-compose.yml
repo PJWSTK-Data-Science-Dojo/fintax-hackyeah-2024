@@ -6,7 +6,7 @@ services:
     # build:
     #   context: ./deep-presentation-client   # Path to your frontend Dockerfile
     ports:
-      - "8051:8051"         # Exposing frontend on port 3000 (change if necessary)
+      - "8501:8501"         # Exposing frontend on port 3000 (change if necessary)
     volumes:
       - ./shared:/app/shared:rw # Mounts shared directory to /app/shared in backend container
     environment:
