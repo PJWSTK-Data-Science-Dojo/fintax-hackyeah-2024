@@ -21,7 +21,7 @@ def whisperx_inference(audio_file_path):
     with open(audio_file_path, "rb") as audio_file:
         # Prepare the files parameter for the POST request
         files = {
-            "file": (audio_file_path, audio_file, "audio/wav")
+            "file": (audio_file_path.name, audio_file, "audio/wav")
         }
 
         # Send the request to the FastAPI server
