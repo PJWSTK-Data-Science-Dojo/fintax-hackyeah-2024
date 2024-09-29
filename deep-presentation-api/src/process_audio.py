@@ -8,7 +8,7 @@ import logging
 import time
 import json
 from audio.find_similiar_sentences_transcription import find_similiar_sentences
-from audio.indexes_alt import indexes_scoring
+from audio.indexes_alt import index_flesch, indexes_fog
 from audio.srt_gen import gen_srt_file
 
 from dotenv import load_dotenv
@@ -127,7 +127,9 @@ class AudioProcessing:
         # logging.info("Generated Loud / Silent labels")
 
         self.audio_processing_results["similar_sentences_after_each_other"] = find_similiar_sentences(transcription["transcription_segments"])
-        self.audio_processing_results["indexes"] = indexes_scoring(transcription["transcription_segments"])
+        self.audio_processing_results["fog"] = indexes_fog(transcription["transcription_segments"])
+        self.audio_processing_results["flesch"] = index_flesch(transcription["transcription_segments"])
+
 
         end_time = time.time()
         delta_time = end_time - start_time
