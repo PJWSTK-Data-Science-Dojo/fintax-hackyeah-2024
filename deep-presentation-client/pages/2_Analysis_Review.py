@@ -84,6 +84,7 @@ def render_textual_analysis(textual_report):
             st.checkbox("Wykryto powtórzenia", value=textual_report.get('repetitions', False), disabled=True)
             st.checkbox("Użyto strony biernej", value=textual_report.get('passive_voice', False), disabled=True)
 
+        # Sekcja z dalszymi pytaniami
         with st.expander("❓ Dalsze pytania do rozważenia"):
             further_questions = textual_report.get('further_questions', 'Brak pytań.')
             questions_list = [q.strip() for q in further_questions.split('\n') if q.strip()]
@@ -121,6 +122,90 @@ def render_textual_analysis(textual_report):
                 """,
                 unsafe_allow_html=True
             )
+
+        # Sekcja z poprawioną prezentacją
+        with st.expander("✏️ Poprawiona prezentacja"):
+            revised_presentation = textual_report.get('revised_presentation', 'Brak danych.')
+            st.markdown(
+                f"""
+                <div style="padding: 10px; border-left: 4px solid #8e44ad;">
+                    <p style="font-size: 15px; line-height: 1.5;">{revised_presentation}</p>
+                </div>
+                """,
+                unsafe_allow_html=True
+            )
+
+        # Sekcja z przetłumaczoną prezentacją
+        with st.expander("🌐 Przetłumaczona prezentacja"):
+            translated_presentation = textual_report.get('translated_presentation', 'Brak danych.')
+            st.markdown(
+                f"""
+                <div style="padding: 10px; border-left: 4px solid #2980b9;">
+                    <p style="font-size: 15px; line-height: 1.5;">{translated_presentation}</p>
+                </div>
+                """,
+                unsafe_allow_html=True
+            )
+
+        # Sekcja z informacją o wulgaryzmach
+        with st.expander("🚫 Wulgaryzmy"):
+            is_vulgar = textual_report.get('is_vulgar', None)
+            if is_vulgar is not None:
+                if is_vulgar:
+                    message = "⚠️ W tekście wykryto wulgaryzmy."
+                    border_color = "#e74c3c"  # Czerwony
+                else:
+                    message = "✅ W tekście nie wykryto wulgaryzmów."
+                    border_color = "#2ecc71"  # Zielony
+                st.markdown(
+                    f"""
+                    <div style="padding: 10px; border-left: 4px solid {border_color};">
+                        <p style="font-size: 15px; line-height: 1.5;">{message}</p>
+                    </div>
+                    """,
+                    unsafe_allow_html=True
+                )
+            else:
+                st.markdown("Brak danych.")
+
+        # Sekcja z analizą sentymentu
+        with st.expander("😊 Analiza sentymentu"):
+            sentiment = textual_report.get('sentiment', 'Brak danych.')
+            st.markdown(
+                f"""
+                <div style="padding: 10px; border-left: 4px solid #16a085;">
+                    <p style="font-size: 15px; line-height: 1.5;">{sentiment}</p>
+                </div>
+                """,
+                unsafe_allow_html=True
+            )
+
+        # Sekcja z kluczowymi frazami
+        with st.expander("🔑 Kluczowe frazy"):
+            key_phrases = textual_report.get('key_phrase', 'Brak danych.')
+            if isinstance(key_phrases, list) and key_phrases:
+                phrases_html = """
+                <div style="padding: 10px; border-left: 4px solid #d35400;">
+                    <ul style="font-size: 15px; line-height: 1.5; margin: 0; padding-left: 20px;">
+                """
+                for phrase in key_phrases:
+                    phrases_html += f"<li style='margin-bottom: 8px;'>{phrase}</li>"
+                phrases_html += """
+                    </ul>
+                </div>
+                """
+                st.markdown(phrases_html, unsafe_allow_html=True)
+            elif isinstance(key_phrases, str):
+                st.markdown(
+                    f"""
+                    <div style="padding: 10px; border-left: 4px solid #d35400;">
+                        <p style="font-size: 15px; line-height: 1.5;">{key_phrases}</p>
+                    </div>
+                    """,
+                    unsafe_allow_html=True
+                )
+            else:
+                st.markdown("Brak danych.")
 
 
 def video_review(video_analysis):
@@ -206,16 +291,56 @@ def render_pauses_data(pauses, video_duration):
     col3.metric("Najdłuższa pauza", f"{max_pause_length:.2f} s")
 
 
+def render_audio_snr(video_analysis):
+    snr_value = video_analysis.get('snr', None)
+    if snr_value is None:
+        return
+
+    st.markdown("### 📶 Wskaźnik SNR (Signal-to-Noise Ratio)")
+    st.metric(label="SNR", value=f"{snr_value:.2f} dB")
+
+
 def audio_review(video_analysis):
     pauses = video_analysis['video']['pauses_data']
     histogram_data = video_analysis['video']['histogram_data']['histogram_data']
     video_length = len(video_analysis['video']['emotions_report']['frames'])
     render_pauses_data(pauses, video_length)
     render_audio_histogram(histogram_data)
+    render_audio_snr(video_analysis)
+
+
+def render_named_entity_recognition(ner_data):
+    if not any(ner_data.values()):
+        return
+
+    container = st.container()
+    with container:
+        st.markdown("### 🏷️ Rozpoznawanie jednostek nazwanych (NER)")
+
+        category_colors = {
+            "works_of_art": "#9b59b6",
+            "people": "#3498db",
+            "phrases": "#2ecc71",
+        }
+
+        for category, entities in ner_data.items():
+            if entities:
+                category_title = "Dzieła sztuki" if category == "works_of_art" else "Osoby" if category == "people" else "Frazy"
+                st.markdown(f"**{category_title}:**")
+
+                entity_html = '<div style="display: flex; flex-wrap: wrap; gap: 10px; margin-top: 10px;">'
+                for entity in entities:
+                    color = category_colors.get(category, "#bdc3c7")
+                    entity_html += f'<div style="background-color: {color}; padding: 5px 10px; border-radius: 5px; color: white;">{entity}</div>'
+                entity_html += '</div>'
+                st.markdown(entity_html, unsafe_allow_html=True)
 
 
 def full_review(video_analysis):
     render_textual_analysis(video_analysis['video']['textual_report'])
+    render_named_entity_recognition(video_analysis['video'].get('named_entity_recognition', {}))
+    video_review(video_analysis)
+    audio_review(video_analysis)
 
 
 def analysis_review():
