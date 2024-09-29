@@ -15,6 +15,8 @@ def get_histogram(video_uuid):
 
     signal = signal / np.max(np.abs(signal))
 
+    signal = signal.tolist()
+
     return {
         "sample_rate": sample_rate,
         "histogram_data": signal
