@@ -79,4 +79,4 @@ async def health_check():
 
 # Run the FastAPI application on port 5000
 if __name__ == "__main__":
-  uvicorn.run("main:app", host="0.0.0.0", port=8080, reload=False, access_log=False)
+  uvicorn.run("main:app", host="0.0.0.0", port=8081, reload=False, access_log=False)
