@@ -304,6 +304,13 @@ def render_audio_snr(video_analysis):
     st.markdown("### 📶 Wskaźnik SNR (Signal-to-Noise Ratio)")
     st.metric(label="SNR", value=f"{snr_value:.2f} dB")
 
+def render_fog_and_flesch(fog, flesch):
+    if fog is None or flesch is None:
+        return
+    st.markdown("### 📚 Analiza tekstu")
+    col1, col2 = st.columns(2)
+    col1.metric("Indeks czytelności Flescha", f"{flesch:.2f}")
+    col2.metric("Indeks mglistości FOG", f"{fog:.2f}")
 
 def audio_review(video_analysis):
     pauses = video_analysis['video']['pauses_data']
@@ -312,6 +319,7 @@ def audio_review(video_analysis):
     render_pauses_data(pauses, video_length)
     render_audio_histogram(histogram_data)
     render_audio_snr(video_analysis)
+    render_fog_and_flesch(video_analysis['audio']['fog'], video_analysis['audio']['flesch'])
 
 
 def render_named_entity_recognition(ner_data):
