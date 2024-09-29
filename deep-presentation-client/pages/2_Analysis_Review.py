@@ -213,35 +213,35 @@ def video_review(video_analysis):
     render_emotions_and_legend(video_col, video_analysis['video']['emotions_report']['frames'])
 
 
-def render_audio_histogram(histogram_data):
-    histogram = histogram_data['histogram_data']
-    sample_rate = histogram_data['sample_rate']
-
-    time_axis = np.linspace(0, len(histogram) / sample_rate, num=len(histogram))
-
-    histogram_df = {
-        "Time (s)": time_axis,
-        "Amplitude": histogram
-    }
-
-    fig = px.line(
-        histogram_df,
-        x="Time (s)",
-        y="Amplitude",
-        title='Audio Histogram',
-        template='plotly_dark',
-        line_shape='spline'
-    )
-
-    fig.update_layout(
-        plot_bgcolor="rgba(0,0,0,0)",
-        paper_bgcolor="rgba(0,0,0,0)",
-        xaxis=dict(showgrid=False),
-        yaxis=dict(showgrid=False),
-        font=dict(color='white')
-    )
-
-    st.plotly_chart(fig, use_container_width=True)
+# def render_audio_histogram(histogram_data):
+#     histogram = histogram_data['histogram_data']
+#     sample_rate = histogram_data['sample_rate']
+#
+#     time_axis = np.linspace(0, len(histogram) / sample_rate, num=len(histogram))
+#
+#     histogram_df = {
+#         "Time (s)": time_axis,
+#         "Amplitude": histogram
+#     }
+#
+#     fig = px.line(
+#         histogram_df,
+#         x="Time (s)",
+#         y="Amplitude",
+#         title='Audio Histogram',
+#         template='plotly_dark',
+#         line_shape='spline'
+#     )
+#
+#     fig.update_layout(
+#         plot_bgcolor="rgba(0,0,0,0)",
+#         paper_bgcolor="rgba(0,0,0,0)",
+#         xaxis=dict(showgrid=False),
+#         yaxis=dict(showgrid=False),
+#         font=dict(color='white')
+#     )
+#
+#     st.plotly_chart(fig, use_container_width=True)
 
 
 def render_pauses_data(pauses, video_duration):
@@ -320,10 +320,10 @@ def render_fog_and_flesch(fog, flesch):
 
 def audio_review(video_analysis):
     pauses = video_analysis['video']['pauses_data']
-    histogram_data = video_analysis['video']['histogram_data']
+    # histogram_data = video_analysis['video']['histogram_data']
     video_length = len(video_analysis['video']['emotions_report']['frames'])
     render_pauses_data(pauses, video_length)
-    render_audio_histogram(histogram_data)
+    # render_audio_histogram(histogram_data)
     render_audio_snr(video_analysis)
     render_fog_and_flesch(video_analysis['audio']['fog'], video_analysis['audio']['flesch'])
 
