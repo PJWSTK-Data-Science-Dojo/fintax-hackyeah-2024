@@ -101,4 +101,3 @@ def indexes_scoring(transcription):
         "flesch_reading_ease": flesch_reading_ease(full_text),
         "gunning_fog_index": gunning_fog_index(full_text)
     }
-    
