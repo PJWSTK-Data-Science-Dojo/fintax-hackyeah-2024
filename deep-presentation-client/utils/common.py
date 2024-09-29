@@ -17,8 +17,8 @@ def initialize(page: str) -> None:
             initial_sidebar_state="expanded",
         )
         st.markdown(get_page_bg_data("Analyzer"), unsafe_allow_html=True)
-    elif page == "NoHome":
-        st.markdown(get_page_bg_data("NoHome"), unsafe_allow_html=True)
+    # elif page == "NoHome":
+    #     st.markdown(get_page_bg_data("NoHome"), unsafe_allow_html=True)
 
 
 def get_page_bg_data(page: str) -> str:
