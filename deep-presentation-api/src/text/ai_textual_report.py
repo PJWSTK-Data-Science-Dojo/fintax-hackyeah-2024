@@ -89,6 +89,18 @@ def _get_target_audience(text: str) -> str:
 
     return get_openai_response(system_prompt, text)
 
+def _get_revised_presentation(text: str) -> str:
+    system_prompt = "You are an expert in presentation analysis and feedback. A user will \
+                    provide you with an excerpt from a presentation in Polish, which may start in the \
+                    middle or include only parts of the presentation. Your task is to, \
+                    given this presentation, prepare a revised version of it, where you \
+                    strengthen its flow, coherance, tone and any other effective elements. \
+                    Identify any aspects that could be improved – such as grammatical errors, \
+                    awkward phrasings, or disruptions in the logical flow. Your revived presentation \
+                    should not widly differ from the original presentation. Always respond in Polish."
+
+    return get_openai_response(system_prompt, text)
+
 
 
 def get_ai_textual_report(video_uuid):
@@ -102,5 +114,6 @@ def get_ai_textual_report(video_uuid):
     report_data["passive_voice"] = _did_use_passive_voice(text)
     report_data["further_questions"] = _get_further_questions(text)
     report_data["target_audienc"] = _get_target_audience(text)
+    report_data["revied_presentation"] = _get_revised_presentation(text)
 
     return report_data
