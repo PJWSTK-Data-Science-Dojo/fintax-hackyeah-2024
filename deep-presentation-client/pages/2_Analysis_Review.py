@@ -283,7 +283,7 @@ def render_pauses_data(pauses, video_duration):
 
     st.markdown(color_bar_html, unsafe_allow_html=True)
 
-    break_lengths = [pause['break_length'] for pause in pauses if 'break_length' in pause]
+    break_lengths = [pause['break_length'] for pause in pauses if 'break_length' in pause and pause['break_length'] is not None]
 
     if break_lengths:
         average_pause_length = np.mean(break_lengths)
