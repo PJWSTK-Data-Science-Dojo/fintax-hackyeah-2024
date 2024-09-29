@@ -228,7 +228,7 @@ def analysis_review():
 
     with st.spinner("Analiza w toku..."):
         while True:
-            stage_response = api.fetch_analysis_stage(st.session_state.video_uuid)
+            stage_response = api.fetch_analysis_stage(str(st.session_state.video_uuid))
             stages = stage_response.get("stages", [])
             if any(stage.get("stage") == "done_visual" for stage in stages):
                 break
@@ -236,10 +236,14 @@ def analysis_review():
 
     data_analysis = api.fetch_video_analysis_data(st.session_state.video_uuid)
 
-    subtitles = api.fetch_subtitles(st.session_state.video_uuid)
-    subtitles_path = Path()
+    subtitles_path = Path(f"{VIDEO_STORAGE}/{st.session_state.video_uuid}/{st.session_state.video_uuid}.srt")
+    with st.spinner("Pobieranie napisów..."):
+        while not subtitles_path.exists():
+            time.sleep(2)
+
+
     st.video(st.session_state.uploaded_video, subtitles={
-        "Polish": f"{VIDEO_STORAGE}/{st.session_state.video_uuid}/{st.session_state.video_uuid}.srt"
+        "Polish": subtitles_path
     })
 
     video_tab, audio_tab, text_tab = st.tabs(["Video", "Mowa", "Pełna analiza"])
