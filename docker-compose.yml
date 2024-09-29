@@ -3,8 +3,8 @@ version: '3.8'
 services:
   client:
     image: localhost/deep-presentation-client:latest
-    build:
-      context: ./deep-presentation-client   # Path to your frontend Dockerfile
+    # build:
+    #   context: ./deep-presentation-client   # Path to your frontend Dockerfile
     ports:
       - "8051:8051"         # Exposing frontend on port 3000 (change if necessary)
     volumes:
@@ -14,8 +14,8 @@ services:
       - VIDEO_STORAGE=/app/shared
   api:
     image: localhost/deep-presentation-api:latest
-    build:
-      context: ./deep-presentation-api    # Path to your backend Dockerfile
+    # build:
+    #   context: ./deep-presentation-api    # Path to your backend Dockerfile
     ports:
       - "8080:8080"
     volumes:
@@ -26,7 +26,7 @@ services:
       - VIDEO_STORAGE=/app/shared
   whisperx_api:
     image: localhost/deep-presentation-whisperx:latest
-    build:
-      context: ./whisperx-fin    # Path to your backend Dockerfile
+    # build:
+    #   context: ./whisperx-fin    # Path to your backend Dockerfile
     ports:
       - "8081:8080"
