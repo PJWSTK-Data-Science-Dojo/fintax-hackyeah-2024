@@ -5,8 +5,9 @@ import os
 from dotenv import load_dotenv
 from utils import api
 
-load_dotenv('.env.local')
+load_dotenv()
 
+API_URL = os.getenv('API_URL')
 VIDEO_STORAGE = Path(os.getenv("VIDEO_STORAGE"))
 if not VIDEO_STORAGE.exists():
     VIDEO_STORAGE.mkdir()

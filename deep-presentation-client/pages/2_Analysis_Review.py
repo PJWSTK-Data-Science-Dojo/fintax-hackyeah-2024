@@ -1,11 +1,12 @@
 import os
+from pathlib import Path
 
 import streamlit as st
 from dotenv import load_dotenv
 
 from utils import api
 
-load_dotenv('.env.local')
+load_dotenv()
 
 API_URL = os.getenv('API_URL')
 VIDEO_STORAGE = os.getenv('VIDEO_STORAGE')
@@ -115,14 +116,20 @@ def text_review():
 
 
 def analysis_review():
+    st.set_page_config(layout="wide")
+
     st.title("Analysis Review")
 
     if "video_uuid" not in st.session_state or not st.session_state.video_uuid:
         st.switch_page("pages/1_Upload.py")
 
     subtitles = api.fetch_subtitles(st.session_state.video_uuid)
-    print(subtitles)
-    st.video(st.session_state.uploaded_video, subtitles=subtitles)
+    subtitles_path = Path()
+    print(subtitles_path)
+    print(subtitles_path.exists())
+    st.video(st.session_state.uploaded_video, subtitles={
+        "Polish": f"{VIDEO_STORAGE }/{st.session_state.video_uuid}/{st.session_state.video_uuid}.srt"
+        })
 
     video_tab, audio_tab, text_tab = st.tabs(["Video", "Mowa", "Pełna analiza"])
 

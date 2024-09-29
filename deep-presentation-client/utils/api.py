@@ -16,8 +16,9 @@ def add_video(video_uuid: UUID) -> bool:
     url = f"{API_URL}/video"
 
     data = {
-            "video_uuid": str(video_uuid)
-        }
+        "video_uuid": str(video_uuid)
+    }
+
     try:
         response = requests.post(url=url, json=data)
 

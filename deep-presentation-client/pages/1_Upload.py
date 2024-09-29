@@ -4,10 +4,11 @@ from dotenv import load_dotenv
 
 from utils.video import create_video
 
-load_dotenv('.env.local')
+load_dotenv()
 
 
 def upload_video():
+    st.set_page_config(layout="wide")
     if upload_video not in st.session_state:
         st.session_state.uploaded_video = None
 
