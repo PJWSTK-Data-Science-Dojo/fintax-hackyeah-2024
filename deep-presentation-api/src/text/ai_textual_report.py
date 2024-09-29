@@ -114,6 +114,6 @@ def get_ai_textual_report(video_uuid):
     report_data["passive_voice"] = _did_use_passive_voice(text)
     report_data["further_questions"] = _get_further_questions(text)
     report_data["target_audienc"] = _get_target_audience(text)
-    report_data["revied_presentation"] = _get_revised_presentation(text)
+    report_data["revised_presentation"] = _get_revised_presentation(text)
 
     return report_data
