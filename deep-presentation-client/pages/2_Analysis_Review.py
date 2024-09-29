@@ -11,8 +11,6 @@ from utils.common import initialize
 
 load_dotenv()
 
-initialize("NoHome")
-
 API_URL = os.getenv('API_URL')
 VIDEO_STORAGE = os.getenv('VIDEO_STORAGE')
 
