@@ -3,8 +3,10 @@ import streamlit as st
 from dotenv import load_dotenv
 
 from utils.video import create_video
+from utils.common import initialize
 
 load_dotenv()
+
 
 
 def upload_video():
@@ -39,4 +41,5 @@ Zostaniesz automatycznie przeniesiony za 10s.
 
 
 if __name__ == "__main__":
+    initialize("NoHome")
     upload_video()

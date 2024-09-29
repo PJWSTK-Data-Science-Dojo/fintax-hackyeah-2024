@@ -12,24 +12,18 @@ def get_img_as_base64(file):
 def initialize(page: str) -> None:
     if page == "Home":
         st.set_page_config(
-            # page_title="ReviewAnalyzer",
             page_icon="🔬",
-            # layout="wide",
-            # initial_sidebar_state="expanded",
-        )
-        st.markdown(get_page_bg_data("Analyzer"), unsafe_allow_html=True)
-        # if "selected_text" not in st.session_state:
-        #     st.session_state.selected_text = ""
-        # if "search_wiki" not in st.session_state:
-        #     st.session_state.search_wiki = False
-    elif page == "DataExplorer":
-        st.set_page_config(
-            page_title="DataExplorer",
-            page_icon="📖",
             layout="wide",
             initial_sidebar_state="expanded",
         )
-        st.markdown(get_page_bg_data("DataExplorer"), unsafe_allow_html=True)
+        st.markdown(get_page_bg_data("Analyzer"), unsafe_allow_html=True)
+    elif page == "NoHome":
+        st.set_page_config(
+            page_icon="🔬",
+            layout="wide",
+            initial_sidebar_state="expanded",
+        )
+        st.markdown(get_page_bg_data("NoHome"), unsafe_allow_html=True)
 
 
 def get_page_bg_data(page: str) -> str:
@@ -57,19 +51,7 @@ def get_page_bg_data(page: str) -> str:
         }}
         </style>
         """
-        # Use this to remove the empty space on top of the page
-        # #root > div:nth-child(1) > div > div > div > div > section > div {{padding-top: 0rem;}}
-        #
-        # Use this to remove "Deploy button (if header visibility is turned on"
-        # .stDeployButton {{
-        #         visibility: hidden;
-        #     }}
-        # This hids those stupid anchors ... but also removes pages from sidebar
-        # /* Hide the link button https://discuss.streamlit.io/t/hide-titles-link/19783/13 */
-        # .stApp a:first-child {{
-        #     display: none;
-        # }}
-    elif page == "DataExplorer":
+    elif page == "NoHome":
         return f"""
         <style>
         header {{visibility: hidden;}}
