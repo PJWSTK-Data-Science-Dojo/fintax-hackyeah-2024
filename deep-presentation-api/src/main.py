@@ -17,9 +17,7 @@ app = FastAPI()
 logging.basicConfig(level=logging.INFO, format="%(asctime)-s %(message)s")
 
 jobs = []
-VIDEO_STORAGE = pathlib.Path(
-    os.getenv("VIDEO_STORAGE")
-)
+VIDEO_STORAGE = pathlib.Path(os.getenv("VIDEO_STORAGE", "test_data"))
 VIDEO_STORAGE.mkdir(parents=True, exist_ok=True)
 
 
@@ -63,7 +61,7 @@ async def upload_video(video_data: VideoAnalysisState):
 
 class ProcesingStageAudioIndexes(BaseModel):
     flesch_reading_ease: float
-    gunning_fog_index: float 
+    gunning_fog_index: float
 
 class ProcesingStageAudioSimiliar(BaseModel):
     start: float
