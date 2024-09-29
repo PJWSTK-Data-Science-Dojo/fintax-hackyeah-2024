@@ -256,7 +256,7 @@ def render_pauses_data(pauses, video_duration):
         current_time = pause['end_break']
 
     if current_time < video_duration:
-        color_list.append(('#3498db', video_duration - current_time))
+        color_list.append(('#2c3e50', video_duration - current_time))
 
     legend_html = """
         <div style="display: flex; justify-content: center; align-items: center; margin-bottom: 10px;">
