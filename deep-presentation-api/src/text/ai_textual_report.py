@@ -112,6 +112,17 @@ def _get_translated_presentation(text: str) -> str:
     return get_openai_response(system_prompt, text)
 
 
+def _get_is_vulgar(text: str) -> bool:
+    system_prompt = "You are an expert in presentation analysis, feedback and translation. A user will \
+                    provide you with an excerpt from a presentation in Polish, which may start in the \
+                    middle or include only parts of the presentation. Your task is to determine if any \
+                    part of the given presentation is vulgar, does it contain any swear words. \
+                    If so, then output '1', otherwise, if there is no vulgariy in the excerpt, output \
+                    '0'. Always respond with only one character (1 or 0)."
+
+    return extract_boolean_model_response(get_openai_response(system_prompt, text))
+
+
 def get_ai_textual_report(video_uuid):
     text = get_transcription(video_uuid)
 
@@ -125,5 +136,6 @@ def get_ai_textual_report(video_uuid):
     report_data["target_audienc"] = _get_target_audience(text)
     report_data["revised_presentation"] = _get_revised_presentation(text)
     report_data["translated_presentation"] = _get_translated_presentation(text)
+    report_data["is_vulgar"] = _get_is_vulgar(text)
 
     return report_data
