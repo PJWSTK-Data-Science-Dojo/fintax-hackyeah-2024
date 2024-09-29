@@ -12,11 +12,7 @@ from utils.common import initialize
 
 load_dotenv()
 
-st.set_page_config(
-    page_icon="🔬",
-    layout="wide",
-    initial_sidebar_state="expanded",
-)
+initialize("NoHome")
 
 API_URL = os.getenv('API_URL')
 VIDEO_STORAGE = os.getenv('VIDEO_STORAGE')
