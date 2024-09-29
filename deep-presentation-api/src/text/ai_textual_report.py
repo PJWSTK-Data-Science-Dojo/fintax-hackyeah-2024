@@ -113,7 +113,7 @@ def _get_translated_presentation(text: str) -> str:
 
 
 def _get_is_vulgar(text: str) -> bool:
-    system_prompt = "You are an expert in presentation analysis, feedback and translation. A user will \
+    system_prompt = "You are an expert in presentation analysis and feedback. A user will \
                     provide you with an excerpt from a presentation in Polish, which may start in the \
                     middle or include only parts of the presentation. Your task is to determine if any \
                     part of the given presentation is vulgar, does it contain any swear words. \
@@ -121,6 +121,25 @@ def _get_is_vulgar(text: str) -> bool:
                     '0'. Always respond with only one character (1 or 0)."
 
     return extract_boolean_model_response(get_openai_response(system_prompt, text))
+
+
+def _get_sentiment(text: str) -> str:
+    system_prompt = "You are an expert in presentation analysis, feedback and translation. A user will \
+                    provide you with an excerpt from a presentation in Polish, which may start in the \
+                    middle or include only parts of the presentation. Your task is to determine the \
+                    sentiment of the presentation. You should respond with just one word. Always \
+                    respond in Polish."
+
+    return get_openai_response(system_prompt, text)
+
+
+def _get_key_phrase(text: str) -> str:
+    system_prompt = "You are an expert in presentation analysis, feedback and translation. A user will \
+                    provide you with an excerpt from a presentation in Polish, which may start in the \
+                    middle or include only parts of the presentation. Your task is to extract the key phrase or \
+                    the key sentence. Always respond in Polish."
+
+    return get_openai_response(system_prompt, text)
 
 
 def get_ai_textual_report(video_uuid):
@@ -137,5 +156,7 @@ def get_ai_textual_report(video_uuid):
     report_data["revised_presentation"] = _get_revised_presentation(text)
     report_data["translated_presentation"] = _get_translated_presentation(text)
     report_data["is_vulgar"] = _get_is_vulgar(text)
+    report_data["sentiment"] = _get_sentiment(text)
+    report_data["key_phrase"] = _get_key_phrase(text)
 
     return report_data
