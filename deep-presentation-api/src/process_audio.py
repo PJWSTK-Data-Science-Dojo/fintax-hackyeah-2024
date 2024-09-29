@@ -110,10 +110,10 @@ class AudioProcessing:
 
         # Transcribe audio file to text
         logging.info("Running transcription")
-        # with open(video_path.with_name("transcription").with_suffix(".json")) as f:
-        #     transcription = json.loads(f.read())
+        
         transcription = whisperx_inference(str(wav_audio_path))
-        print(transcription)
+        with open(video_path.with_name("transcription").with_suffix(".json"), "w") as f:
+            f.write(json.dumps(transcription))
         gen_srt_file(transcription, video_path.with_suffix(".srt"))
         self.audio_processing_results['srt_ready'] = True
 
