@@ -1,12 +1,14 @@
 import functools
 import os
 
+from dotenv import load_dotenv
 import openai
 from openai.types.chat import ChatCompletion
 
 
 @functools.cache
 def _get_openai_client():
+    load_dotenv()
     return openai.OpenAI(
         api_key=os.environ.get("OPENAI_KEY"),
     )

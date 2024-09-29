@@ -17,9 +17,7 @@ app = FastAPI()
 logging.basicConfig(level=logging.INFO, format="%(asctime)-s %(message)s")
 
 jobs = []
-VIDEO_STORAGE = pathlib.Path(
-    os.getenv("VIDEO_STORAGE")
-)
+VIDEO_STORAGE = pathlib.Path(os.getenv("VIDEO_STORAGE", "test_data"))
 VIDEO_STORAGE.mkdir(parents=True, exist_ok=True)
 
 
@@ -63,7 +61,7 @@ async def upload_video(video_data: VideoAnalysisState):
 
 class ProcesingStageAudioIndexes(BaseModel):
     flesch_reading_ease: float
-    gunning_fog_index: float 
+    gunning_fog_index: float
 
 class ProcesingStageAudioSimiliar(BaseModel):
     start: float
@@ -77,7 +75,7 @@ class ProcessingStage(BaseModel):
     stage: dict
     audio: ProcesingStageAudio
 
-@app.post("/analysis/audio")
+@app.post("/analysis/stage")
 async def get_processing_status(video_data: VideoAnalysisState):
     global jobs
     for job in jobs:
@@ -85,8 +83,8 @@ async def get_processing_status(video_data: VideoAnalysisState):
             return await job.get_processing_stage()
     raise HTTPException(status_code=404, detail="Process not found.")
 
-@app.post("/analysis/video")
-async def get_processing_status(video_data: VideoAnalysisState):
+@app.post("/analysis/data")
+async def get_processed_data(video_data: VideoAnalysisState):
     global jobs
     for job in jobs:
         if str(job.id) == video_data.video_uuid:

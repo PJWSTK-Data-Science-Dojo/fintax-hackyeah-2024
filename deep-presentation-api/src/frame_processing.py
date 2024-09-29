@@ -4,10 +4,10 @@ from collections import Counter
 import os
 from typing import List
 
-VIDEO_STORAGE =  pathlib.Path(os.getenv("VIDEO_STORAGE"))
+VIDEO_STORAGE =  pathlib.Path(os.getenv("VIDEO_STORAGE", "test_data"))
 
 def get_emotions_report(video_uuid, start_from_farme_in_seconds: int=0):
-    dir = f"{VIDEO_STORAGE}/{video_uuid}/frames" # change 'test_data' later
+    dir = f"{VIDEO_STORAGE}/{video_uuid}/frames"
 
     report_data = {}
     report_data['frames'] = []
