@@ -19,7 +19,7 @@ services:
     volumes:
       - ./shared:/app/shared:rw # Mounts shared directory to /app/shared in backend container
     environment:
-      - OPENAI_API_KEY=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
+      - OPENAI_API_KEY=sk-...
       - WHISPERX_API=http://whisperx_api:8081
       - VIDEO_STORAGE=/app/shared
   whisperx_api:
