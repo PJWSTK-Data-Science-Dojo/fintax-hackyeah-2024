@@ -88,7 +88,9 @@ async def get_processed_data(video_data: VideoAnalysisState):
     global jobs
     for job in jobs:
         if str(job.id) == video_data.video_uuid:
-            return await job.get_processing_data()
+            res = await job.get_processing_data()
+            logging.info(res)
+            return await res
     raise HTTPException(status_code=404, detail="Process not found.")
 
 
