@@ -94,4 +94,4 @@ async def get_processed_data(video_data: VideoAnalysisState):
 
 # Run the FastAPI application on port 5000
 if __name__ == "__main__":
-  uvicorn.run("main:app", host="0.0.0.0", port=8080, reload=False, access_log=False)
+  uvicorn.run("main:app", host="0.0.0.0", port=8082, reload=False, access_log=False)
