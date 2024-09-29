@@ -8,7 +8,7 @@ import logging
 import time
 import json
 from audio.find_similiar_sentences_transcription import find_similiar_sentences
-from audio.indexes import indexes_scoring
+from audio.indexes_alt import indexes_scoring
 from audio.srt_gen import gen_srt_file
 
 from dotenv import load_dotenv

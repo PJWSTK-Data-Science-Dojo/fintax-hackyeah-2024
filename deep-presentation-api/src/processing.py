@@ -77,5 +77,5 @@ class Processing:
             {"stage": "done_visual", "time": datetime.now().strftime("%H:%M:%S")}
         )
         logging.info(f"{self.stages[-1]['stage']} - {self.id}")
-        
+        logging.info(self.get_processing_data())
         # Processing data with llms 
