@@ -16,7 +16,7 @@ load_dotenv()
 
 def whisperx_inference(audio_file_path):
     url = os.environ.get("WHISPERX_API") + "/transcribe/"
-    print(url)
+    logging.info(url)
     # Open the audio file in binary mode and send it via a POST request
     with open(audio_file_path, "rb") as audio_file:
         # Prepare the files parameter for the POST request
@@ -30,9 +30,9 @@ def whisperx_inference(audio_file_path):
         # Check if the request was successful
         if response.status_code == 200:
             # Print the transcription result from the API response
-            return json.loads(response.json())
+            return response.json()
         else:
-            print("Error:", response.status_code, response.text)
+            logging.info(f"Error: {response.status_code} {response.text}")
 
 def analyze_audio(file_path):
     """Analyzes an audio file for loudness and returns a list of chunks with loudness values.
