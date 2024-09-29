@@ -13,7 +13,7 @@ VIDEO_STORAGE = os.getenv('VIDEO_STORAGE')
 EMOTICON_MAP = {
     'angry': ('😡', '#FF6B6B'),
     'disgust': ('🤢', '#9ACD32'),
-    'fear': ('😨', '#5DADE2'),
+    'fear': ('😨', '#004976'),
     'happy': ('😃', '#F4D03F'),
     'sad': ('😢', '#5B9BD5'),
     'surprise': ('😮', '#FFB6C1'),
