@@ -3,9 +3,9 @@ import time
 from pathlib import Path
 
 import numpy as np
+import plotly.express as px
 import streamlit as st
 from dotenv import load_dotenv
-from matplotlib import pyplot as plt
 
 from utils import api
 
@@ -132,16 +132,32 @@ def render_audio_histogram(histogram_data):
     histogram = histogram_data['histogram_data']
     sample_rate = histogram_data['sample_rate']
 
-    fig, ax = plt.subplots(figsize=(10, 4))
     time_axis = np.linspace(0, len(histogram) / sample_rate, num=len(histogram))
 
-    ax.plot(time_axis, histogram, color='blue', linewidth=0.5)
-    ax.set_title('Audio Histogram', fontsize=16)
-    ax.set_xlabel('Czas (w sekundach)', fontsize=12)
-    ax.set_ylabel('Amplituda', fontsize=12)
-    ax.grid(True, which='both', linestyle='--', linewidth=0.5)
+    histogram_df = {
+        "Time (s)": time_axis,
+        "Amplitude": histogram
+    }
 
-    st.pyplot(fig)
+    fig = px.line(
+        histogram_df,
+        x="Time (s)",
+        y="Amplitude",
+        title='Audio Histogram',
+        template='plotly_dark',
+        line_shape='spline'
+    )
+
+    fig.update_layout(
+        plot_bgcolor="rgba(0,0,0,0)",
+        paper_bgcolor="rgba(0,0,0,0)",
+        xaxis=dict(showgrid=False),
+        yaxis=dict(showgrid=False),
+        font=dict(color='white')
+    )
+
+    st.plotly_chart(fig, use_container_width=True)
+
 
 def render_pauses_data(pauses, video_duration):
     color_list = []
@@ -188,6 +204,7 @@ def render_pauses_data(pauses, video_duration):
     col1.metric("Ilość pauz", f"{len(pauses)}")
     col2.metric("Średnia długość pauzy", f"{average_pause_length:.2f} s")
     col3.metric("Najdłuższa pauza", f"{max_pause_length:.2f} s")
+
 
 def audio_review(video_analysis):
     pauses = video_analysis['video']['pauses_data']
