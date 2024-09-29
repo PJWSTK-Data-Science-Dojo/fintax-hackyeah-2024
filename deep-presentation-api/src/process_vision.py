@@ -5,6 +5,7 @@ import time
 
 from text.ai_textual_report import get_ai_textual_report
 from video.frame_processing import get_emotions_report
+from audio.get_histogram import get_histogram
 
 def split_video_to_frames(video_file_path, tmpdir):
     """
@@ -79,6 +80,8 @@ class VisionProcessing:
         self.video_processing_results['textual_report'] = get_ai_textual_report(video_file_path.stem)
 
         self.video_processing_results['emotions_report'] = get_emotions_report(video_file_path.stem)
+
+        self.video_processing_results['histogram_data'] = get_histogram(video_file_path.stem)
 
         end_time = time.time()
         delta_time = end_time - start_time
