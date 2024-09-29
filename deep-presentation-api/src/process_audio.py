@@ -8,7 +8,7 @@ import logging
 import time
 import json
 from audio.find_similiar_sentences_transcription import find_similiar_sentences
-from audio.indexes import indexes_scoring
+from audio.indexes_alt import index_flesch, indexes_fog
 from audio.srt_gen import gen_srt_file
 
 from dotenv import load_dotenv
@@ -114,20 +114,25 @@ class AudioProcessing:
         transcription = whisperx_inference(str(wav_audio_path))
         with open(video_path.with_name("transcription").with_suffix(".json"), "w") as f:
             f.write(json.dumps(transcription["transcription_segments"]))
+        logging.info('test1')
         gen_srt_file(transcription["transcription_segments"], video_path.with_suffix(".srt"))
-        self.audio_processing_results['srt_ready'] = True
+        logging.info('test2')
+        # self.audio_processing_results['srt_ready'] = True
 
         if transcription is None:
             raise RuntimeError("Transcription failed")
         logging.info("Transcription done")
+        logging.info('test4')
 
         # Generate Loud / Silent labels
         # logging.info("Generate Loud / Silent labels")
         # loudness_data = analyze_audio(wav_audio_path)
         # logging.info("Generated Loud / Silent labels")
 
-        self.audio_processing_results["similar_sentences_after_each_other"] = find_similiar_sentences(transcription["transcription_segments"])
-        self.audio_processing_results["indexes"] = indexes_scoring(transcription["transcription_segments"])
+        # self.audio_processing_results["similar_sentences_after_each_other"] = find_similiar_sentences(transcription["transcription_segments"])
+        # self.audio_processing_results["fog"] = indexes_fog(transcription["transcription_segments"])
+        # self.audio_processing_results["flesch"] = index_flesch(transcription["transcription_segments"])
+
 
         end_time = time.time()
         delta_time = end_time - start_time

@@ -35,10 +35,10 @@ class Processing:
             "stages": self.stages,
         }
 
-    def get_processing_data(self):
+    async def get_processing_data(self):
         return {
             "video": self.vision_processing.video_processing_results,
-            "audio": self.audio_processing.audio_processing_results,
+            # "audio": self.audio_processing.audio_processing_results,
         }
 
     async def start(self, video_file_name, workspace_dir):
@@ -77,5 +77,5 @@ class Processing:
             {"stage": "done_visual", "time": datetime.now().strftime("%H:%M:%S")}
         )
         logging.info(f"{self.stages[-1]['stage']} - {self.id}")
-        
+        # logging.info(self.get_processing_data())
         # Processing data with llms 
