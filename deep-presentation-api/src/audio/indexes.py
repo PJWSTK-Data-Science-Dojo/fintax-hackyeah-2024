@@ -9,12 +9,12 @@ nltk.download('cmudict')
 d = cmudict.dict()
 
 # Function to count syllables in a word
-def count_syllables(word):
-    word = word.lower()
-    if word in d:
-        return [len(list(y for y in x if y[-1].isdigit())) for x in d[word]][0]
-    else:
-        return sum(1 for char in word if char in 'aeiouy')  # Simple fallback for unknown words
+# def count_syllables(word):
+#     word = word.lower()
+#     if word in d:
+#         return [len(list(y for y in x if y[-1].isdigit())) for x in d[word]][0]
+#     else:
+#         return sum(1 for char in word if char in 'aeiouy')  # Simple fallback for unknown words
 
 # Function to check if a word is complex (3 or more syllables)
 def is_complex_word(word):
