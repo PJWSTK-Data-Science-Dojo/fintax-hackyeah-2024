@@ -124,8 +124,8 @@ class AudioProcessing:
         # loudness_data = analyze_audio(wav_audio_path)
         # logging.info("Generated Loud / Silent labels")
 
-        # self.audio_processing_results["similar_sentences_after_each_other"] = find_similiar_sentences(transcription)
-        # self.audio_processing_results["indexes"] = indexes_scoring(transcription)
+        self.audio_processing_results["similar_sentences_after_each_other"] = find_similiar_sentences(transcription)
+        self.audio_processing_results["indexes"] = indexes_scoring(transcription)
 
         end_time = time.time()
         delta_time = end_time - start_time

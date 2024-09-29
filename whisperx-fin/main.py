@@ -29,7 +29,7 @@ async def transcribe_audio(file: UploadFile = File(...)):
         audio_file = str(audio_file_path)
         
         # Load the WhisperX model
-        model = whisperx.load_model("small", device, compute_type=compute_type, asr_options={"initial_prompt": "Now, umm.. watch uhh.. this video"})
+        model = whisperx.load_model("tiny", device, compute_type=compute_type, asr_options={"initial_prompt": "Now, umm.. watch uhh.. this video"})
 
         # Load the audio
         audio = whisperx.load_audio(audio_file)
