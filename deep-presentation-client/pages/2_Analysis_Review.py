@@ -12,14 +12,14 @@ API_URL = os.getenv('API_URL')
 VIDEO_STORAGE = os.getenv('VIDEO_STORAGE')
 
 EMOTICON_MAP = {
-    'angry': ('😡', '#FF6B6B'),
-    'disgust': ('🤢', '#9ACD32'),
-    'fear': ('😨', '#004976'),
-    'happy': ('😃', '#F4D03F'),
-    'sad': ('😢', '#5B9BD5'),
-    'surprise': ('😮', '#FFB6C1'),
-    'neutral': ('😐', '#C0C0C0'),
-    None: ('😐', '#E0E0E0')
+    'angry': ('😡', '#FF6B6B', 'Złość'),
+    'disgust': ('🤢', '#9ACD32', 'Obrzydzenie'),
+    'fear': ('😨', '#004976', 'Strach'),
+    'happy': ('😃', '#F4D03F', 'Radość'),
+    'sad': ('😢', '#5B9BD5', 'Smutek'),
+    'surprise': ('😮', '#FFB6C1', 'Zaskoczenie'),
+    'neutral': ('😐', '#C0C0C0', 'Neutralny'),
+    None: ('😐', '#C0C0C0', 'Neutralny')
 }
 
 def mock_analysis_response():
@@ -87,13 +87,13 @@ def render_emotions_and_legend(video_col):
         with legend_container:
             st.markdown('<div style="margin-top: 20px;"></div>', unsafe_allow_html=True)  # Add some margin
             legend_html = '<div style="display: flex; justify-content: center; flex-wrap: wrap; gap: 10px; width: 100%;">'  # Set the fixed width to match the video
-            for emotion, (emoticon, color) in EMOTICON_MAP.items():
+            for emotion, (emoticon, color, polish_emotion) in EMOTICON_MAP.items():
                 if emotion is None:
                     continue
                 legend_html += (
                     f'<div style="background-color: {color}; padding: 10px 15px; border-radius: 5px; display: flex; align-items: center; '
                     f'justify-content: center; height: 50px; min-width: 100px; margin: 5px; color: black">'
-                    f'{emoticon} - {emotion.capitalize()}'
+                    f'{emoticon} - {polish_emotion.capitalize()}'
                     '</div>'
                 )
             legend_html += '</div>'
