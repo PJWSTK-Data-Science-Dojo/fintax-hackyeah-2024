@@ -50,7 +50,7 @@ def fetch_analysis_stage(video_uuid: UUID) -> dict | None:
 
     try:
         response = requests.post(url=url, json={
-            "video_uuid": video_uuid
+            "video_uuid": str(video_uuid)
         })
 
         if response.status_code == 200:
@@ -68,7 +68,7 @@ def fetch_analysis_data(video_uuid: UUID) -> dict | None:
 
     try:
         response = requests.post(url=url, json={
-            "video_uuid": video_uuid
+            "video_uuid": str(video_uuid)
         })
 
         if response.status_code == 200:
@@ -85,7 +85,7 @@ def fetch_video_analysis_data(video_uuid: UUID) -> dict | None:
 
     try:
         response = requests.post(url=url, json={
-            "video_uuid": video_uuid
+            "video_uuid": str(video_uuid)
         })
 
         if response.status_code == 200:
@@ -102,7 +102,7 @@ def fetch_analysis_stage(video_uuid):
 
     try:
         response = requests.post(url=url, json={
-            "video_uuid": video_uuid
+            "video_uuid": str(video_uuid)
         })
 
         if response.status_code == 200:
