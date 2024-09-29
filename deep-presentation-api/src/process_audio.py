@@ -11,9 +11,12 @@ from audio.find_similiar_sentences_transcription import find_similiar_sentences
 from audio.indexes import indexes_scoring
 from audio.srt_gen import gen_srt_file
 
+from dotenv import load_dotenv
+load_dotenv()
 
 def whisperx_inference(audio_file_path):
-    url = os.getenv("WHISPERX_API") + "/transcribe/"
+    url = os.environ.get("WHISPERX_API") + "/transcribe/"
+    print(url)
     # Open the audio file in binary mode and send it via a POST request
     with open(audio_file_path, "rb") as audio_file:
         # Prepare the files parameter for the POST request
@@ -23,7 +26,7 @@ def whisperx_inference(audio_file_path):
 
         # Send the request to the FastAPI server
         response = requests.post(url, files=files)
-
+        
         # Check if the request was successful
         if response.status_code == 200:
             # Print the transcription result from the API response
@@ -110,6 +113,7 @@ class AudioProcessing:
         # with open(video_path.with_name("transcription").with_suffix(".json")) as f:
         #     transcription = json.loads(f.read())
         transcription = whisperx_inference(str(wav_audio_path))
+        print(transcription)
         gen_srt_file(transcription, video_path.with_suffix(".srt"))
         self.audio_processing_results['srt_ready'] = True
 
