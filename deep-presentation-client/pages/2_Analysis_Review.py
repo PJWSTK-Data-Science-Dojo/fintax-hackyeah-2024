@@ -283,8 +283,13 @@ def render_pauses_data(pauses, video_duration):
 
     st.markdown(color_bar_html, unsafe_allow_html=True)
 
-    average_pause_length = np.mean([pause['break_length'] for pause in pauses])
-    max_pause_length = max([pause['break_length'] for pause in pauses])
+    if pauses:
+        average_pause_length = np.mean([pause['break_length'] for pause in pauses])
+        max_pause_length = max([pause['break_length'] for pause in pauses])
+    else:
+        average_pause_length = 0
+        max_pause_length = 0
+
     col1, col2, col3 = st.columns(3)
     col1.metric("Ilość pauz", f"{len(pauses)}")
     col2.metric("Średnia długość pauzy", f"{average_pause_length:.2f} s")
