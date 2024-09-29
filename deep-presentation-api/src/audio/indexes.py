@@ -98,7 +98,7 @@ def indexes_scoring(transcription):
         full_text += sentence_dict['text']
     
     return {
-        flesch_reading_ease: flesch_reading_ease(full_text),
-        gunning_fog_index: gunning_fog_index(full_text)
+        "flesch_reading_ease": flesch_reading_ease(full_text),
+        "gunning_fog_index": gunning_fog_index(full_text)
     }
     
