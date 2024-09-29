@@ -75,7 +75,7 @@ class ProcessingStage(BaseModel):
     stage: dict
     audio: ProcesingStageAudio
 
-@app.post("/analysis/audio")
+@app.post("/analysis/stage")
 async def get_processing_status(video_data: VideoAnalysisState):
     global jobs
     for job in jobs:
@@ -83,8 +83,8 @@ async def get_processing_status(video_data: VideoAnalysisState):
             return await job.get_processing_stage()
     raise HTTPException(status_code=404, detail="Process not found.")
 
-@app.post("/analysis/video")
-async def get_processing_status(video_data: VideoAnalysisState):
+@app.post("/analysis/data")
+async def get_processed_data(video_data: VideoAnalysisState):
     global jobs
     for job in jobs:
         if str(job.id) == video_data.video_uuid:
