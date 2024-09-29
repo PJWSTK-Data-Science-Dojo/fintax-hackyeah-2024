@@ -1,14 +1,12 @@
-# Use an official Python runtime as a parent image
-FROM python:3.10-slim
+# Use an official Linux base image
+FROM debian:bookworm
 
-# Set the working directory in the container
+# Set the working directory
 WORKDIR /app
 
-# Install any necessary system dependencies (if needed)
-# You can add other dependencies if required by your app
-RUN apt-get update && apt-get install -y --no-install-recommends \
-    build-essential ffmpeg \
-    && rm -rf /var/lib/apt/lists/*
+# Update packages and install necessary dependencies
+RUN apt-get update && apt-get install -y \
+    ffmpeg python3 python3-venv python3-pip
 
 # Create a virtual environment
 RUN python3 -m venv venv
@@ -17,6 +15,7 @@ RUN python3 -m venv venv
 ENV PATH="/app/venv/bin:$PATH"
 
 # Copy the requirements file (if you have one)
+RUN pip install torch==2.2.2 torchvision==0.17.2 torchaudio==2.2.2 --index-url https://download.pytorch.org/whl/cpu
 COPY requirements.txt .
 
 # Install Python dependencies
@@ -26,4 +25,4 @@ RUN pip install --no-cache-dir -r requirements.txt
 COPY . .
 
 # Apply cron job and Set the entry point command
-CMD python3 src/main.py
+CMD python3 main.py
