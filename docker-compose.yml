@@ -10,14 +10,14 @@ services:
     volumes:
       - ./shared:/app/shared:rw # Mounts shared directory to /app/shared in backend container
     environment:
-      - API_URL=http://api:8080
+      - API_URL=http://api:8082
       - VIDEO_STORAGE=/app/shared
   api:
     image: localhost/deep-presentation-api:latest
     # build:
     #   context: ./deep-presentation-api    # Path to your backend Dockerfile
     ports:
-      - "8080:8080"
+      - "8082:8082"
     volumes:
       - ./shared:/app/shared:rw # Mounts shared directory to /app/shared in backend container
     environment:
