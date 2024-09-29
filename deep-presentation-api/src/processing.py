@@ -38,7 +38,7 @@ class Processing:
     async def get_processing_data(self):
         return {
             "video": self.vision_processing.video_processing_results,
-            # "audio": self.audio_processing.audio_processing_results,
+            "audio": self.audio_processing.audio_processing_results,
         }
 
     async def start(self, video_file_name, workspace_dir):
