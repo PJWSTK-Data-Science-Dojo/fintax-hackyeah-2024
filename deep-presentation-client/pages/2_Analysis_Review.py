@@ -8,6 +8,7 @@ import streamlit as st
 from dotenv import load_dotenv
 
 from utils import api
+from utils.common import initialize
 
 load_dotenv()
 
@@ -283,10 +284,13 @@ def render_pauses_data(pauses, video_duration):
 
     st.markdown(color_bar_html, unsafe_allow_html=True)
 
-    if pauses:
-        average_pause_length = np.mean([pause['break_length'] for pause in pauses])
-        max_pause_length = max([pause['break_length'] for pause in pauses])
+    break_lengths = [pause['break_length'] for pause in pauses if 'break_length' in pause and pause['break_length'] is not None]
+
+    if break_lengths:
+        average_pause_length = np.mean(break_lengths)
+        max_pause_length = max(break_lengths)
     else:
+        print(pauses)
         average_pause_length = 0
         max_pause_length = 0
 
@@ -397,4 +401,5 @@ def analysis_review():
 
 
 if __name__ == "__main__":
+    initialize("NoHome")
     analysis_review()
