@@ -1,5 +1,5 @@
 # Use an official Linux base image
-FROM debian:bookworm
+FROM docker.io/debian:bookworm
 
 # Set the working directory
 WORKDIR /app
