@@ -107,7 +107,7 @@ def video_review():
 
 def audio_review():
     video_uuid = "0000-4444-0000-4444"
-    data = api.fetch_audio_analysis(video_uuid)
+    data = api.fetch_analysis_data(video_uuid)
 
 
 def text_review():
@@ -123,10 +123,6 @@ def analysis_review():
     if "video_uuid" not in st.session_state or not st.session_state.video_uuid:
         st.switch_page("pages/1_Upload.py")
 
-    subtitles = api.fetch_subtitles(st.session_state.video_uuid)
-    subtitles_path = Path()
-    print(subtitles_path)
-    print(subtitles_path.exists())
     st.video(st.session_state.uploaded_video, subtitles={
         "Polish": f"{VIDEO_STORAGE }/{st.session_state.video_uuid}/{st.session_state.video_uuid}.srt"
         })

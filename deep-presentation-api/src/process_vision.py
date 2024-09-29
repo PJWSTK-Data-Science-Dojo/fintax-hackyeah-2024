@@ -1,12 +1,10 @@
-import time
-import tempfile
-import requests
+import logging
 import pathlib
 import subprocess
-import logging
-from io import BytesIO
-from PIL import Image
+import time
+
 from text.ai_textual_report import get_ai_textual_report
+from video.frame_processing import get_emotions_report
 
 def split_video_to_frames(video_file_path, tmpdir):
     """
@@ -76,9 +74,11 @@ class VisionProcessing:
         self.video_processing_all_frames_count = len(video_frames)
         # Process each video chunk
         logging.info(f"Processing video frames")
-        
+
         # TODO: Process video
         self.video_processing_results['textual_report'] = get_ai_textual_report(video_file_path.stem)
+
+        self.video_processing_results['emotions_report'] = get_emotions_report(video_file_path.stem)
 
         end_time = time.time()
         delta_time = end_time - start_time
