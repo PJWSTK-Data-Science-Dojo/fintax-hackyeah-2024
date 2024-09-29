@@ -57,6 +57,7 @@ def _did_make_repetitions(text: str) -> bool:
 
     return extract_boolean_model_response(get_openai_response(system_prompt, text))
 
+
 def _did_use_passive_voice(text: str) -> bool:
     system_prompt = "You are an expert in presentation analysis and feedback. A user will \
                     provide you with an excerpt from a presentation in Polish, which may start in the \
@@ -69,6 +70,26 @@ def _did_use_passive_voice(text: str) -> bool:
     return extract_boolean_model_response(get_openai_response(system_prompt, text))
 
 
+def _get_further_questions(text: str) -> str:
+    system_prompt = "You are an expert in presentation analysis and feedback. A user will \
+                    provide you with an excerpt from a presentation in Polish, which may start in the \
+                    middle or include only parts of the presentation. Your task is to \
+                    create a few question based on the presentations. Separate questions \
+                    with new lines. Always respond in Polish."
+
+    return get_openai_response(system_prompt, text)
+
+
+def _get_target_audience(text: str) -> str:
+    system_prompt = "You are an expert in presentation analysis and feedback. A user will \
+                    provide you with an excerpt from a presentation in Polish, which may start in the \
+                    middle or include only parts of the presentation. Your task is to \
+                    determin the targe audience to the best of your ability. Answer with just one word, \
+                    the target audience. Always respind in Polish."
+
+    return get_openai_response(system_prompt, text)
+
+
 
 def get_ai_textual_report(video_uuid):
     text = get_transcription(video_uuid)
@@ -77,7 +98,9 @@ def get_ai_textual_report(video_uuid):
     report_data["ai_advice"] = _get_ai_advice(text)
     report_data["too_many_numbers_usesd"] = _did_use_too_many_numbers(text)
     report_data["chage_of_topic"] = _did_change_topics(text)
-    report_data["repetitions"]= _did_make_repetitions(text)
-    report_data["passive_voice"]= _did_use_passive_voice(text)
+    report_data["repetitions"] = _did_make_repetitions(text)
+    report_data["passive_voice"] = _did_use_passive_voice(text)
+    report_data["further_questions"] = _get_further_questions(text)
+    report_data["target_audienc"] = _get_target_audience(text)
 
     return report_data
