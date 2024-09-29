@@ -133,6 +133,15 @@ def _get_sentiment(text: str) -> str:
     return get_openai_response(system_prompt, text)
 
 
+def _get_key_phrase(text: str) -> str:
+    system_prompt = "You are an expert in presentation analysis, feedback and translation. A user will \
+                    provide you with an excerpt from a presentation in Polish, which may start in the \
+                    middle or include only parts of the presentation. Your task is to extract the key phrase or \
+                    the key sentence. Always respond in Polish."
+
+    return get_openai_response(system_prompt, text)
+
+
 def get_ai_textual_report(video_uuid):
     text = get_transcription(video_uuid)
 
@@ -148,5 +157,6 @@ def get_ai_textual_report(video_uuid):
     report_data["translated_presentation"] = _get_translated_presentation(text)
     report_data["is_vulgar"] = _get_is_vulgar(text)
     report_data["sentiment"] = _get_sentiment(text)
+    report_data["key_phrase"] = _get_key_phrase(text)
 
     return report_data
