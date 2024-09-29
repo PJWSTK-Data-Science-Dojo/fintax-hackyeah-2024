@@ -56,34 +56,74 @@ def render_emotions_and_legend(video_col, emotions_frames):
             st.markdown(legend_html, unsafe_allow_html=True)
 
 
-def render_textual_analysis(video_col, textual_report):
-    with video_col:
-        st.markdown("### Raport analizy tekstowej")
+def render_textual_analysis(textual_report):
+    container = st.container()
+    with container:
+        st.markdown("### 📊 Raport analizy tekstowej")
 
-        # AI Advice
-        st.markdown("**Porady AI:**")
-        st.markdown(textual_report.get('ai_advice', 'Brak porad AI.'))
+        # Sekcja z poradami AI
+        with st.expander("💡 Porady AI", expanded=True):
+            ai_advice = textual_report.get('ai_advice', 'Brak porad AI.')
+            st.markdown(
+                f"""
+                <div style="padding: 10px; border-left: 4px solid #3498db;">
+                    <p style="font-size: 15px; line-height: 1.5;">{ai_advice}</p>
+                </div>
+                """,
+                unsafe_allow_html=True
+            )
 
-        # Flags
-        st.markdown("Znalezione błędy:")
-        st.checkbox("Użyto zbyt wielu liczb", value=textual_report.get('too_many_numbers_usesd', False), disabled=True)
-        st.checkbox("Wykryto zmianę tematu", value=textual_report.get('chage_of_topic', False), disabled=True)
-        st.checkbox("Wykryto powtórzenia", value=textual_report.get('repetitions', False), disabled=True)
-        st.checkbox("Użyto strony biernej", value=textual_report.get('passive_voice', False), disabled=True)
+        # Sekcja ze znalezionymi błędami
+        with st.expander("⚠️ Znalezione błędy", expanded=True):
+            st.markdown("**W raporcie znaleziono następujące problemy:**")
+            st.checkbox("Użyto zbyt wielu liczb", value=textual_report.get('too_many_numbers_usesd', False),
+                        disabled=True)
+            st.checkbox("Wykryto zmianę tematu", value=textual_report.get('chage_of_topic', False), disabled=True)
+            st.checkbox("Wykryto powtórzenia", value=textual_report.get('repetitions', False), disabled=True)
+            st.checkbox("Użyto strony biernej", value=textual_report.get('passive_voice', False), disabled=True)
 
-        # Further Questions
-        st.markdown("**Dalsze pytania do rozważenia:**")
-        st.markdown(textual_report.get('further_questions', 'Brak pytań.'))
+        with st.expander("❓ Dalsze pytania do rozważenia"):
+            further_questions = textual_report.get('further_questions', 'Brak pytań.')
+            questions_list = [q.strip() for q in further_questions.split('\n') if q.strip()]
+            if questions_list:
+                html_content = """
+                <div style="padding: 10px; border-left: 4px solid #f39c12;">
+                    <ul style="font-size: 15px; line-height: 1.5; margin: 0; padding-left: 20px;">
+                """
+                for question in questions_list:
+                    html_content += f"<li style='margin-bottom: 8px;'>{question}</li>"
+                html_content += """
+                    </ul>
+                </div>
+                """
+                st.markdown(html_content, unsafe_allow_html=True)
+            else:
+                st.markdown(
+                    """
+                    <div style="padding: 10px; border-left: 4px solid #f39c12;">
+                        <p style="font-size: 15px; line-height: 1.5;">Brak pytań.</p>
+                    </div>
+                    """,
+                    unsafe_allow_html=True
+                )
 
-        # Target Audience
-        st.markdown(f"**Grupa docelowa:** {textual_report.get('target_audienc', 'Nie określono')}")
+        # Sekcja z grupą docelową
+        with st.expander("🎯 Grupa docelowa"):
+            target_audience = textual_report.get('target_audienc', 'Nie określono')
+            st.markdown(
+                f"""
+                <div style="padding: 10px; border-left: 4px solid #2ecc71;">
+                    <p style="font-size: 15px; font-weight: bold;">Grupa docelowa:</p>
+                    <p style="font-size: 14px;">{target_audience}</p>
+                </div>
+                """,
+                unsafe_allow_html=True
+            )
 
 
 def video_review(video_analysis):
     video_col = st.columns(1)[0]
     render_emotions_and_legend(video_col, video_analysis['video']['emotions_report']['frames'])
-
-    render_textual_analysis(video_col, video_analysis['video']['textual_report'])
 
 
 def audio_review():
@@ -91,8 +131,9 @@ def audio_review():
     data = api.fetch_analysis_data(video_uuid)
 
 
-def text_review():
+def full_review(video_analysis):
     video_uuid = "0000-4444-0000-4444"
+    render_textual_analysis(video_analysis['video']['textual_report'])
     data = api.fetch_full_analysis(video_uuid)
 
 
@@ -116,8 +157,6 @@ def analysis_review():
 
     subtitles = api.fetch_subtitles(st.session_state.video_uuid)
     subtitles_path = Path()
-    print(subtitles_path)
-    print(subtitles_path.exists())
     st.video(st.session_state.uploaded_video, subtitles={
         "Polish": f"{VIDEO_STORAGE}/{st.session_state.video_uuid}/{st.session_state.video_uuid}.srt"
     })
@@ -131,7 +170,7 @@ def analysis_review():
         audio_review()
 
     with text_tab:
-        text_review()
+        full_review(video_analysis)
 
 
 if __name__ == "__main__":
