@@ -80,24 +80,6 @@ def fetch_analysis_data(video_uuid: UUID) -> dict | None:
 
     return None
 
-
-def fetch_full_analysis(video_uuid: UUID) -> dict | None:
-    url = f"{API_URL}/analysis/full"
-
-    try:
-        response = requests.post(url=url, json={
-            "video_uuid": video_uuid
-        })
-
-        if response.status_code == 200:
-            return response.json()
-
-        return None
-    except requests.RequestException as rex:
-        print(rex)
-
-    return None
-
 def fetch_video_analysis_data(video_uuid: UUID) -> dict | None:
     url = f"{API_URL}/analysis/data"
 

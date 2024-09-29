@@ -2,8 +2,10 @@ import os
 import time
 from pathlib import Path
 
+import numpy as np
 import streamlit as st
 from dotenv import load_dotenv
+from matplotlib import pyplot as plt
 
 from utils import api
 
@@ -126,15 +128,77 @@ def video_review(video_analysis):
     render_emotions_and_legend(video_col, video_analysis['video']['emotions_report']['frames'])
 
 
-def audio_review():
-    video_uuid = "0000-4444-0000-4444"
-    data = api.fetch_analysis_data(video_uuid)
+def render_audio_histogram(histogram_data):
+    histogram = histogram_data['histogram_data']
+    sample_rate = histogram_data['sample_rate']
+
+    fig, ax = plt.subplots(figsize=(10, 4))
+    time_axis = np.linspace(0, len(histogram) / sample_rate, num=len(histogram))
+
+    ax.plot(time_axis, histogram, color='blue', linewidth=0.5)
+    ax.set_title('Audio Histogram', fontsize=16)
+    ax.set_xlabel('Czas (w sekundach)', fontsize=12)
+    ax.set_ylabel('Amplituda', fontsize=12)
+    ax.grid(True, which='both', linestyle='--', linewidth=0.5)
+
+    st.pyplot(fig)
+
+def render_pauses_data(pauses, video_duration):
+    color_list = []
+    current_time = 0.0
+    for pause in pauses:
+        if pause['start_break'] > current_time:
+            segment_duration = pause['start_break'] - current_time
+            color_list.append(('#3498db', segment_duration))  # Speech color
+        segment_duration = pause['end_break'] - pause['start_break']
+        color_list.append(('#2c3e50', segment_duration))  # Pause color
+        current_time = pause['end_break']
+
+    if current_time < video_duration:
+        color_list.append(('#3498db', video_duration - current_time))
+
+    legend_html = """
+        <div style="display: flex; justify-content: center; align-items: center; margin-bottom: 10px;">
+            <div style="display: flex; align-items: center; margin-right: 15px;">
+                <div style="width: 20px; height: 20px; background-color: #3498db; margin-right: 5px;"></div>
+                <span>Mowa</span>
+            </div>
+            <div style="display: flex; align-items: center;">
+                <div style="width: 20px; height: 20px; background-color: #2c3e50; margin-right: 5px;"></div>
+                <span>Pauza</span>
+            </div>
+        </div>
+        """
+
+    # Display legend
+    st.markdown(legend_html, unsafe_allow_html=True)
+
+    # Render the color bar
+    color_bar_html = '<div style="display: flex; justify-content: center; align-items: center; width: 100%;">'
+    for color, duration in color_list:
+        width_percentage = (duration / video_duration) * 100
+        color_bar_html += f'<div style="flex: {width_percentage}; height: 30px; background-color: {color};"></div>'
+    color_bar_html += '</div>'
+
+    st.markdown(color_bar_html, unsafe_allow_html=True)
+
+    average_pause_length = np.mean([pause['break_length'] for pause in pauses])
+    max_pause_length = max([pause['break_length'] for pause in pauses])
+    col1, col2, col3 = st.columns(3)
+    col1.metric("Ilość pauz", f"{len(pauses)}")
+    col2.metric("Średnia długość pauzy", f"{average_pause_length:.2f} s")
+    col3.metric("Najdłuższa pauza", f"{max_pause_length:.2f} s")
+
+def audio_review(video_analysis):
+    pauses = video_analysis['video']['pauses_data']
+    histogram_data = video_analysis['video']['histogram_data']['histogram_data']
+    video_length = len(video_analysis['video']['emotions_report']['frames'])
+    render_pauses_data(pauses, video_length)
+    render_audio_histogram(histogram_data)
 
 
 def full_review(video_analysis):
-    video_uuid = "0000-4444-0000-4444"
     render_textual_analysis(video_analysis['video']['textual_report'])
-    data = api.fetch_full_analysis(video_uuid)
 
 
 def analysis_review():
@@ -153,7 +217,7 @@ def analysis_review():
                 break
             time.sleep(1)
 
-    video_analysis = api.fetch_video_analysis_data(st.session_state.video_uuid)
+    data_analysis = api.fetch_video_analysis_data(st.session_state.video_uuid)
 
     subtitles = api.fetch_subtitles(st.session_state.video_uuid)
     subtitles_path = Path()
@@ -164,13 +228,13 @@ def analysis_review():
     video_tab, audio_tab, text_tab = st.tabs(["Video", "Mowa", "Pełna analiza"])
 
     with video_tab:
-        video_review(video_analysis)
+        video_review(data_analysis)
 
     with audio_tab:
-        audio_review()
+        audio_review(data_analysis)
 
     with text_tab:
-        full_review(video_analysis)
+        full_review(data_analysis)
 
 
 if __name__ == "__main__":
