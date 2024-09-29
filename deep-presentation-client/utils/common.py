@@ -18,11 +18,6 @@ def initialize(page: str) -> None:
         )
         st.markdown(get_page_bg_data("Analyzer"), unsafe_allow_html=True)
     elif page == "NoHome":
-        st.set_page_config(
-            page_icon="🔬",
-            layout="wide",
-            initial_sidebar_state="expanded",
-        )
         st.markdown(get_page_bg_data("NoHome"), unsafe_allow_html=True)
 
 
