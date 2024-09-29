@@ -114,10 +114,8 @@ class AudioProcessing:
         transcription = whisperx_inference(str(wav_audio_path))
         with open(video_path.with_name("transcription").with_suffix(".json"), "w") as f:
             f.write(json.dumps(transcription))
-        gen_srt_file(transcription, video_path.with_suffix(".srt"))
+        gen_srt_file(transcription["transcription_segments"], video_path.with_suffix(".srt"))
         self.audio_processing_results['srt_ready'] = True
-
-        transcription = whisperx_inference(wav_audio_path)
 
         if transcription is None:
             raise RuntimeError("Transcription failed")
@@ -128,8 +126,8 @@ class AudioProcessing:
         # loudness_data = analyze_audio(wav_audio_path)
         # logging.info("Generated Loud / Silent labels")
 
-        self.audio_processing_results["similar_sentences_after_each_other"] = find_similiar_sentences(transcription)
-        self.audio_processing_results["indexes"] = indexes_scoring(transcription)
+        self.audio_processing_results["similar_sentences_after_each_other"] = find_similiar_sentences(transcription["transcription_segments"])
+        self.audio_processing_results["indexes"] = indexes_scoring(transcription["transcription_segments"])
 
         end_time = time.time()
         delta_time = end_time - start_time

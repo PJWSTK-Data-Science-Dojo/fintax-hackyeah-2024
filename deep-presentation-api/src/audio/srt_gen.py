@@ -11,7 +11,7 @@ def seconds_to_srt_time(seconds):
 def gen_srt_file(subtitle_data: dict, output_path: pathlib.Path):
     # Prepare content for the SRT file
     srt_content = []
-    for index, item in enumerate(subtitle_data["transcription_segments"], start=1):
+    for index, item in enumerate(subtitle_data, start=1):
         start_time = seconds_to_srt_time(item['start'])
         end_time = seconds_to_srt_time(item['end'])
         srt_content.append(f"{index}")
