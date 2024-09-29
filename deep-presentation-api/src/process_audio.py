@@ -13,7 +13,7 @@ from audio.srt_gen import gen_srt_file
 
 
 def whisperx_inference(audio_file_path):
-    url = os.getenv("WHISPERX_API") + "/transcribe"
+    url = os.getenv("WHISPERX_API") + "/transcribe/"
     # Open the audio file in binary mode and send it via a POST request
     with open(audio_file_path, "rb") as audio_file:
         # Prepare the files parameter for the POST request
@@ -27,7 +27,7 @@ def whisperx_inference(audio_file_path):
         # Check if the request was successful
         if response.status_code == 200:
             # Print the transcription result from the API response
-            print("Transcription result:", response.json())
+            return json.loads(response.json())
         else:
             print("Error:", response.status_code, response.text)
 
