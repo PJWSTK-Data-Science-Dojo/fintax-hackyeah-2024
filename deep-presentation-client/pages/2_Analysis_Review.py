@@ -12,6 +12,12 @@ from utils.common import initialize
 
 load_dotenv()
 
+st.set_page_config(
+    page_icon="🔬",
+    layout="wide",
+    initial_sidebar_state="expanded",
+)
+
 API_URL = os.getenv('API_URL')
 VIDEO_STORAGE = os.getenv('VIDEO_STORAGE')
 
@@ -361,7 +367,6 @@ def full_review(video_analysis):
 
 
 def analysis_review():
-    st.set_page_config(layout="wide")
 
     st.title("Analiza filmu")
 
