@@ -22,5 +22,7 @@ COPY . /app
 # Expose the port that the Streamlit app runs on
 EXPOSE 8501
 
+RUN pip install plotly==5.24.1
+
 # Run the Streamlit app
 CMD ["streamlit", "run", "Home.py", "--server.address=0.0.0.0"]
