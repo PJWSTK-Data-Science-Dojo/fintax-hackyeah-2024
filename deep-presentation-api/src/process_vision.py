@@ -84,7 +84,7 @@ class VisionProcessing:
 
         self.video_processing_results['emotions_report'] = get_emotions_report(video_file_path.stem)
 
-        self.video_processing_results['histogram_data'] = get_histogram(video_file_path.stem)
+        # self.video_processing_results['histogram_data'] = get_histogram(video_file_path.stem)
 
         self.video_processing_results['pauses_data'] = get_speach_pauses(video_file_path.stem)
 
